@@ -4,15 +4,15 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { apiGitHub } from './services/githubService';
 // import { apiClickUp } from './services/clickupService';
+import { apiGitHub } from './services/githubService';
 
 // const clickupTasks = ref([]);
 const githubTasks = ref([]);
 
 onMounted(async () => {
   try {
-    const githubResponse = await apiGitHub.get(''); //GitHub
+    const githubResponse = await apiGitHub.get('/users'); //GitHub
     githubTasks.value = githubResponse.data;
 
     // const clickupResponse = await apiClickUp.get(''); //ClickUp
