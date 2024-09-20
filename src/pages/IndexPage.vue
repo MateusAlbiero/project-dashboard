@@ -1,47 +1,23 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+    
+    Dados da organização: {{ githubOrg }}
+
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import { onMounted, ref } from 'vue';
+import { apiGitHub } from 'src/services/githubService';
 
-defineOptions({
-  name: 'IndexPage'
-});
+const githubOrg = ref([]);
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
+onMounted(async () => {
+  try {
+    const gitOrgs = await apiGitHub.get('/orgs/sgbrsist');
+    githubOrg.value = gitOrgs.data;
+  } catch (error) {
+    console.error('Erro ao retornar os dados da API: ', error);
   }
-]);
-
-const meta = ref<Meta>({
-  totalCount: 1200
 });
 </script>
