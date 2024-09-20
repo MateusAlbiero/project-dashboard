@@ -10,7 +10,7 @@ declare module 'vue' {
 
 
 const apiGitHub = axios.create({
-  baseURL: 'https://api.github.com/'
+  //Header com o token disponível no link devido ao GitGuardian: https://app.clickup.com/t/86a4wcjqk
 });
 
 
