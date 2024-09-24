@@ -1,29 +1,27 @@
 <template>
-  <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
-    <div>
-      <div style="font-size: 30vh">
-        404
-      </div>
-
-      <div class="text-h2" style="opacity:.4">
-        Oops. Nothing here...
-      </div>
-
-      <q-btn
-        class="q-mt-xl"
-        color="white"
-        text-color="blue"
-        unelevated
-        to="/"
-        label="Go Home"
-        no-caps
-      />
-    </div>
-  </div>
+  <main class="tela-erro">
+    <section>
+      <h1>Ops...</h1>
+      <h3>Página não encontrada</h3>
+      <p>
+        A página que você está tentando acessar pode ter sido removida, estar temporariamente indisponível ou o link foi informado incorretamente.
+      </p>
+      <router-link to="/">Voltar para página inicial</router-link>
+    </section>
+    <aside>
+      <section>
+        <span>404</span>
+      </section>
+    </aside>
+  </main>
 </template>
 
-<script setup lang="ts">
-defineOptions({
-  name: 'ErrorNotFound'
-});
+<script>
+export default {
+  name: 'ErrorPage',
+}
 </script>
+
+<style scoped>
+@import 'src/css/erro.css';
+</style>
