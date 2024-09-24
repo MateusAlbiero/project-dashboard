@@ -1,0 +1,103 @@
+@font-face{
+    font-family: 'Poppins-Light';
+    src: url('../font/Poppins/Poppins-Light.ttf');
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Roboto';
+    src: url('../font/Roboto/Roboto-Regular.ttf');
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Bellarina';
+    src: url('../font/Bellarina/Regular.otf');
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Coluna';
+    src: url('../font/Coluna/Coluna.otf');
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Pineapple';
+    src: url('../font/Pineapple/Pineapple.otf');
+    font-display: swap;
+}
+
+h1 {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+h5{font-weight: 500;}
+h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.font-10{font-size: 10px;}
+.font-11{font-size: 11px;}
+.font-12{font-size: 12px;}
+.font-13{font-size: 13px;}
+.font-14{font-size: 14px;}
+.font-15{font-size: 15px;}
+.font-16{font-size: 16px;}
+.font-17{font-size: 17px;}
+.font-18{font-size: 18px;}
+.font-19{font-size: 19px;}
+.font-20{font-size: 20px;}
+.font-21{font-size: 21px;}
+.font-22{font-size: 22px;}
+.font-23{font-size: 23px;}
+.font-24{font-size: 24px;}
+.font-25{font-size: 25px;}
+.font-27{font-size: 27px;}
+.font-28{font-size: 28px;}
+.font-30{font-size: 30px;}
+.font-32{font-size: 32px;}
+.font-40{font-size: 40px;}
+.font-50{font-size: 50px;}
+.font-60{font-size: 60px;}
+
+.font-poppins{font-family: 'Poppins','Helvetica',sans-serif;}
+.font-poppins-light{font-family: 'Poppins-Light','Helvetica',sans-serif;}
+.font-roboto{font-family: 'Roboto','Helvetica',sans-serif;}
+.font-bellarina{font-family: 'Bellarina','Helvetica',sans-serif;}
+
+.bold{font-weight: 700;}
+.strong{font-weight: 900;}
+
+.small, small {
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.small11 {
+    font-size: 11px !important;
+    font-weight: 400;
+    vertical-align: text-bottom !important;
+}
+
+.note-editable, .note-placeholder {font-size: 14px;}
+
+@media only screen and (max-width: 425px) {
+    .font-17{font-size: 15px;}
+    .font-18{font-size: 16px;}
+    .font-19{font-size: 17px;}
+    .font-20{font-size: 18px;}
+    .font-21{font-size: 19px;}
+    .font-22{font-size: 20px;}
+    .font-23{font-size: 21px;}
+    .font-25{font-size: 23px;}
+    .font-27{font-size: 25px;}
+    .font-30{font-size: 28px;}
+    .font-40{font-size: 38px;}
+    .font-50{font-size: 48px;}
+    .font-60{font-size: 58px;}
+}
