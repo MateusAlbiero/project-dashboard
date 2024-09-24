@@ -2,7 +2,7 @@
   "name": "project-dashboard",
   "version": "0.0.1",
   "description": "A dashboard",
-  "productName": "Dashboard App",
+  "productName": "Painel de tarefas SGBr®",
   "author": "Mateus Albiero <mateusalbiero1@gmail.com>",
   "private": true,
   "scripts": {
