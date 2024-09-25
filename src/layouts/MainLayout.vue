@@ -10,10 +10,22 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Painel de Tarefas
-        </q-toolbar-title>
+        <div class="">
+          <q-toolbar-title>
+            Painel de Tarefas
+          </q-toolbar-title>
+        </div>
+        <div class="search-container">
+          <q-input
+            outlined
+            dense
+            placeholder="Buscar..."
+            v-model="searchQuery"
+            class="search-bar"
+            debounce="300"
+            @input="handleSearch"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -70,10 +82,15 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
+const searchQuery = ref('');
 const router = useRouter();
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+
+function handleSearch() {
+  console.log(`Buscando por: ${searchQuery.value}`);
 }
 
 function navigateTo(platform: string) {
@@ -89,3 +106,6 @@ function logout() {
   router.push('/login');
 }
 </script>
+<style scoped>
+@import 'src/css/style.css';
+</style>
