@@ -1,12 +1,12 @@
-.search-container {
-flex: 1;
-display: flex;
-justify-content: center;
-border-color:white;
-}
-  
 .search-bar {
-width: 40%;
+    width: 100%;
+    min-width: 50%;
+    border-color:#ffffff;
+  }
+.search-container {
+    display: flex;
+    justify-content: center;
+    flex: 1;
 }
 
 .q-toolbar-title {
