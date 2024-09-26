@@ -1,76 +1,59 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <div class="">
-          <q-toolbar-title>
-            Painel de Tarefas
-          </q-toolbar-title>
+      <q-toolbar class="bg-primary text-white">
+        <div class="q-pa-md q-gutter-sm">
+          <q-btn
+            :color="selectedButton == 'dashboard' ? 'white' : 'blue'"
+            :text-color="selectedButton == 'dashboard' ? 'black' : 'white'"
+            label="Dashboard"
+            class="q-mt-md"
+            @click="selectButton('dashboard')"
+          >
+            <q-tooltip>Dashboard</q-tooltip>
+          </q-btn>
+          <q-btn
+            :color="selectedButton == 'tarefas' ? 'white' : 'blue'"
+            :text-color="selectedButton == 'tarefas' ? 'black' : 'white'"
+            label="Tarefas"
+            class="q-mt-md"
+            @click="selectButton('tarefas')"
+          >
+            <q-tooltip>Tarefas</q-tooltip>
+          </q-btn>
         </div>
+        <q-space />
         <div class="search-container">
           <q-input
-            outlined
+            dark
             dense
-            placeholder="Buscar..."
+            standout
             v-model="searchQuery"
+            input-class="text-left"
             class="search-bar"
             debounce="300"
-            @input="handleSearch"
-          />
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                v-if="searchQuery !== ''"
+                name="clear"
+                class="cursor-pointer"
+                @click="searchQuery = ''"
+              />
+            </template>
+          </q-input>
         </div>
+        <q-space />
+        <q-btn round @click="logout">
+          <q-avatar size="40px">
+            <img src="/img/Mateus_FundoAzul.png" />
+          </q-avatar>
+        </q-btn>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label header>
-          Acessos Rápidos
-        </q-item-label>
-
-        <q-item clickable v-ripple @click="navigateTo('github')">
-          <q-item-section avatar>
-            <q-icon name="code" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>GitHub</q-item-label>
-            <q-item-label caption>Visualizar tarefas do GitHub</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple @click="navigateTo('clickup')">
-          <q-item-section avatar>
-            <q-icon name="task" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>ClickUp</q-item-label>
-            <q-item-label caption>Visualizar tarefas do ClickUp</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-item clickable v-ripple @click="logout">
-          <q-item-section avatar>
-            <q-icon name="logout" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Sair</q-item-label>
-            <q-item-label caption>Encerrar sessão</q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -81,24 +64,12 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const leftDrawerOpen = ref(false);
+const selectedButton = ref('');
 const searchQuery = ref('');
 const router = useRouter();
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-function handleSearch() {
-  console.log(`Buscando por: ${searchQuery.value}`);
-}
-
-function navigateTo(platform: string) {
-  if (platform === 'github') {
-    window.open('https://github.com/sgbrsist', '_blank');
-  } else if (platform === 'clickup') {
-    window.open('https://app.clickup.com', '_blank');
-  }
+function selectButton(buttonName: string) {
+  selectedButton.value = buttonName;
 }
 
 function logout() {
@@ -106,6 +77,7 @@ function logout() {
   router.push('/login');
 }
 </script>
+
 <style scoped>
 @import 'src/css/style.css';
 </style>
