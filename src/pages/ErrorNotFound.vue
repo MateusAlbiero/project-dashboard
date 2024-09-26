@@ -6,7 +6,6 @@
       <p>
         A página que você está tentando acessar pode ter sido removida, estar temporariamente indisponível ou o link foi informado incorretamente.
       </p>
-      <router-link to="/">Voltar para página inicial</router-link>
     </section>
     <aside>
       <section>
@@ -15,13 +14,11 @@
     </aside>
   </main>
 </template>
-
 <script>
 export default {
   name: 'ErrorPage',
 }
 </script>
-
 <style scoped>
 @import 'src/css/erro.css';
 </style>
