@@ -1,36 +1,60 @@
 <template>
-  <q-page class="row justify-evenly">
-    Listagem de tarefas da organização {{ githubOrg?.name }}
-  </q-page>
+  <div class="q-pa-md row items-start q-gutter-md">
+    <q-card class="my-card">
+      <q-card-section class="bg-blue text-white">
+        <div class="text-h6">Sincronização</div>
+        <div class="text-subtitle2">Marcos de Oliveira</div>
+      </q-card-section>
+
+      <q-card-actions align="around">
+        <q-btn flat>Detalhes</q-btn>
+      </q-card-actions>
+    </q-card>
+    <q-card class="my-card">
+      <q-card-section class="bg-blue text-white">
+        <div class="text-h6">Erro de ortografia</div>
+        <div class="text-subtitle2">Wesley Schons</div>
+      </q-card-section>
+      <q-card-actions align="around">
+        <q-btn flat>Detalhes</q-btn>
+      </q-card-actions>
+    </q-card>
+  </div>
+  <div class="q-pa-md row items-start q-gutter-md">
+    <q-card class="my-card">
+      <q-card-section class="bg-blue text-white">
+        <div class="text-h6">Atualização alter</div>
+        <div class="text-subtitle2">Tiagão</div>
+      </q-card-section>
+
+      <q-card-actions align="around">
+        <q-btn flat>Detalhes</q-btn>
+      </q-card-actions>
+    </q-card>
+    <q-card class="my-card">
+      <q-card-section class="bg-blue text-white">
+        <div class="text-h6">Erro ao gravar cadastro</div>
+        <div class="text-subtitle2">Victor Rigon</div>
+      </q-card-section>
+      <q-card-actions align="around">
+        <q-btn flat>Detalhes</q-btn>
+      </q-card-actions>
+    </q-card>
+  </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { apiGitHub } from 'src/services/githubService';
-
-interface GitHubOrg {
-  name: string;
-}
-
-interface GitHubRepos {
-  name: string;
-  login: string;
-  id: number;
-}
-
-const githubOrg = ref<GitHubOrg | null>(null);
-const githubRepos = ref<GitHubRepos | null>(null);
-
-
-onMounted(async () => {
-  try {
-    const gitOrgs = await apiGitHub.get('/orgs/sgbrsist');
-    githubOrg.value = gitOrgs.data;
-
-    const gitRepos = await apiGitHub.get('/orgs/sgbrsist');
-    githubRepos.value = gitRepos.data;
-  } catch (error) {
-    console.error('Erro ao retornar os dados da API: ', error);
+<script>
+export default {
+  setup () {
+    return {
+      lorem: 'Ajustes na sincronização do comandas do SG Master com o MeuSG.'
+    }
   }
-});
+}
 </script>
+
+<style lang="sass" scoped>
+.my-card
+  width: 100%
+  max-width: 250px
+</style>
