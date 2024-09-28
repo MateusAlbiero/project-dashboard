@@ -73,7 +73,6 @@ function selectButton(buttonName: string) {
 }
 
 function logout() {
-  console.log('Usuário saiu');
   router.push('/login');
 }
 </script>
