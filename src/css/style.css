@@ -11,7 +11,7 @@
 }
 
 .q-toolbar-title {
-margin-left: 20px;
+    margin-left: 20px;
 }
 
 .login-page {
@@ -65,6 +65,26 @@ margin-left: 20px;
     width: 100%;
     max-width: 250px;
 }
+
+.modal-dashboard {
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-left: 20%;
+    margin-right: 20%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.blue-header {
+    background-color: blue;
+    color: white;
+  }
 
 @import url('font.css');
 
