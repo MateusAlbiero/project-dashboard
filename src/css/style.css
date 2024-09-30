@@ -61,6 +61,11 @@ margin-left: 20px;
     color: red;
 }
 
+.card {
+    width: 100%;
+    max-width: 250px;
+}
+
 @import url('font.css');
 
 html {
