@@ -47,9 +47,25 @@
           </q-input>
         </div>
         <q-space />
-        <q-btn round @click="logout">
+        <q-btn round>
           <q-avatar size="40px">
             <img src="/img/Mateus_FundoAzul.png" />
+            <q-menu>
+              <div class="row no-wrap q-pa-md column items-center">
+                <q-avatar size="72px">
+                  <img src="/img/Mateus_FundoAzul.png" />
+                </q-avatar>
+                <div class="text-subtitle1 q-mt-md q-mb-xs">Mateus</div>
+                <q-btn
+                  color="blue"
+                  label="Encerrar sessão"
+                  push
+                  size="sm"
+                  @click="logout"
+                  v-close-popup
+                />
+              </div>
+            </q-menu>
           </q-avatar>
         </q-btn>
       </q-toolbar>
@@ -78,5 +94,5 @@ function logout() {
 </script>
 
 <style scoped>
-@import 'src/css/style.css';
+  @import 'src/css/style.css';
 </style>
