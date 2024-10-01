@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-xl dashboard-container">
-    <div class="flex-jb">
+    <div class="flex-jb q-toolbar-title">
       <h4>Dashboard</h4>
     </div>
     <div class="q-mb-xl q-pa-xl modal-dashboard">
@@ -20,19 +20,23 @@
           </q-input>
         </div>
         <q-table
+          class="my-sticky-dynamic"
           flat
           bordered
           :rows="filteredLast15Days"
           :columns="columns"
           row-key="protocol"
+          @row-click="openTaskDetails"
         >
           <template v-slot:no-data>
-            Nenhum registro encontrado :(
+            <div class="center">
+              Nenhum registro encontrado :(
+            </div>
           </template>
         </q-table>
       </div>
     </div>
-    <div class="q-pa-xl modal-dashboard">
+    <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
           <h5>Nos próximos 15 dias</h5>
@@ -41,7 +45,7 @@
             dense
             debounce="300"
             v-model="filterNext15Days"
-            placeholder="Pesquisar por descrição, protocolo ou responsável"
+            placeholder="Buscar..."
           >
             <template v-slot:append>
               <q-icon name="search" />
@@ -55,63 +59,65 @@
           :columns="columns"
           row-key="protocol"
           header-class="blue-header"
+          @row-click="openTaskDetails"
         >
           <template v-slot:no-data>
-            Nenhum registro encontrado :(
+            <div class="center">
+              Nenhum registro encontrado :(
+            </div>
           </template>
         </q-table>
       </div>
     </div>
+
+    <q-dialog v-model="isDialogOpen">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Detalhes da Tarefa</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <h3>{{ selectedTask.name }}</h3>
+          <div>{{ selectedTask.description }}</div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
-
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Descrição',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
-  { name: 'priority', label: 'Prioridade', field: 'priority', sortable: true },
-  { name: 'responsible', label: 'Responsável', field: 'responsible' },
-  { name: 'protocol', label: 'Protocolo', field: 'protocol' },
-  { name: 'deliveryTime', label: 'Prazo de entrega', field: 'deliveryTime' },
-];
-
-const rowsLast15Days = [
-  {
-    name: 'Criar opção pra zerar demais impostos',
-    priority: 'Urgente',
-    responsible: 'João, Maria',
-    protocol: '56561321',
-    deliveryTime: '08/10/2005',
-  },
-];
-
-const rowsNext15Days = [
-  {
-    name: 'Erro ao finalizar venda com produto com grade',
-    priority: 'Não informada',
-    responsible: 'Ana, Marcos',
-    protocol: '56561321',
-    deliveryTime: '08/10/2005',
-    status: 'Pendente',
-  },
-];
+import { ref, computed, onMounted } from 'vue';
+import { apiGitHub } from 'src/services/githubService';
 
 export default {
   setup() {
+    const columns = [
+      {
+        name: 'name',
+        required: true,
+        label: 'Descrição',
+        align: 'left',
+        field: row => row.name,
+        format: val => `${val}`,
+        sortable: true,
+      },
+      { name: 'priority', label: 'Prioridade', field: 'priority', sortable: true },
+      { name: 'responsible', label: 'Responsável', field: 'responsible' },
+      { name: 'protocol', label: 'Protocolo', field: 'protocol' },
+      { name: 'deliveryTime', label: 'Prazo de entrega', field: 'deliveryTime' },
+    ];
+
     const filterLast15Days = ref('');
     const filterNext15Days = ref('');
+    const rowsLast15Days = ref([]);
+    const rowsNext15Days = ref([]);
+    const selectedTask = ref({});
+    const isDialogOpen = ref(false);
 
     const filteredLast15Days = computed(() => {
-      return rowsLast15Days.filter((row) =>
+      return rowsLast15Days.value.filter((row) =>
         Object.values(row).some((val) =>
           val.toString().toLowerCase().includes(filterLast15Days.value.toLowerCase())
         )
@@ -119,19 +125,39 @@ export default {
     });
 
     const filteredNext15Days = computed(() => {
-      return rowsNext15Days.filter((row) =>
+      return rowsNext15Days.value.filter((row) =>
         Object.values(row).some((val) =>
           val.toString().toLowerCase().includes(filterNext15Days.value.toLowerCase())
         )
       );
     });
 
+    onMounted(async () => {
+      try {
+        const response = await apiGitHub.get('/orgs/sgbrsist/repos');
+        const tasks = response.data;
+
+        rowsLast15Days.value = tasks.filter(task => task.period === 'last15Days');
+        rowsNext15Days.value = tasks.filter(task => task.period === 'next15Days');
+      } catch (error) {
+        console.error('Erro ao buscar tarefas:', error);
+      }
+    });
+
+    const openTaskDetails = (task) => {
+      selectedTask.value = task;
+      isDialogOpen.value = true;
+    };
+
     return {
       columns,
       filterLast15Days,
       filterNext15Days,
       filteredLast15Days,
-      filteredNext15Days
+      filteredNext15Days,
+      selectedTask,
+      isDialogOpen,
+      openTaskDetails,
     };
   }
 }
