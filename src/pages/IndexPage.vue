@@ -3,15 +3,16 @@
     <div class="flex-jb q-toolbar-title">
       <h4>Dashboard</h4>
     </div>
+
     <div class="q-mb-xl q-pa-xl modal-dashboard">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
-          <h5>Concluídas nos últimos 15 dias</h5>
+          <h5>Todas as Tarefas Concluídas</h5>
           <q-input
             outlined
             dense
             debounce="300"
-            v-model="filterLast15Days"
+            v-model="filterCompletedTasks"
             placeholder="Buscar..."
           >
             <template v-slot:append>
@@ -20,10 +21,9 @@
           </q-input>
         </div>
         <q-table
-          class="my-sticky-dynamic"
           flat
           bordered
-          :rows="filteredLast15Days"
+          :rows="filteredCompletedTasks"
           :columns="columns"
           row-key="protocol"
           @row-click="openTaskDetails"
@@ -48,16 +48,16 @@
         </q-table>
       </div>
     </div>
-    
+
     <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
-          <h5>Nos próximos 15 dias</h5>
+          <h5>Todas as Tarefas Pendentes</h5>
           <q-input
             outlined
             dense
             debounce="300"
-            v-model="filterNext15Days"
+            v-model="filterPendingTasks"
             placeholder="Buscar..."
           >
             <template v-slot:append>
@@ -68,7 +68,7 @@
         <q-table
           flat
           bordered
-          :rows="filteredNext15Days"
+          :rows="filteredPendingTasks"
           :columns="columns"
           row-key="protocol"
           @row-click="openTaskDetails"
@@ -94,18 +94,21 @@
       </div>
     </div>
 
-    <q-dialog v-model="isDialogOpen">
+    <q-dialog v-model="isDialogOpen" full-height full-width transition-show="scale" transition-hide="scale" class="mt-1">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">Detalhes da Tarefa</div>
-          <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
+          <q-space />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <h3>{{ selectedTask.name }}</h3>
+          <div>teste</div>
         </q-card-section>
 
-        <q-card-section>
-          <h3>{{ selectedTask.name }}</h3>
-          <div>{{ selectedTask.description }}</div>
-        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Fechar" color="primary" v-close-popup />
+        </q-card-actions>
       </q-card>
     </q-dialog>
   </div>
@@ -113,56 +116,52 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import { apiGitHub } from 'src/services/githubService';
+import { apiClickUp } from 'src/services/clickupService';
 
 export default {
   setup() {
     const columns = [
-      {
-        name: 'name',
-        required: true,
-        label: 'Descrição',
-        align: 'left',
-        field: row => row.name,
-        format: val => `${val}`,
-        sortable: true,
-      },
-      { name: 'priority', label: 'Prioridade', field: 'priority', sortable: true },
-      { name: 'responsible', label: 'Responsável', field: 'responsible' },
-      { name: 'protocol', label: 'Protocolo', field: 'protocol' },
-      { name: 'deliveryTime', label: 'Prazo de entrega', field: 'deliveryTime' },
+      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, maxWidth: '120px' },
+      { name: 'priority', label: 'Prioridade', field: row => row.priority?.priority || 'N/A', sortable: true },
+      { name: 'assignees.username', label: 'Responsável', field: row => row.assignees?.[0]?.username || 'Não informado' },
+      { name: 'custom_id', label: 'Protocolo', field: 'custom_id' },
+      { name: 'status', label: 'Status', field: row => row.status?.status || 'N/A' },
     ];
 
-    const filterLast15Days = ref('');
-    const filterNext15Days = ref('');
-    const rowsLast15Days = ref([]);
-    const rowsNext15Days = ref([]);
+    const filterCompletedTasks = ref('');
+    const filterPendingTasks = ref('');
+    const rows = ref([]);
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
+    const current = ref(3);
 
-    const filteredLast15Days = computed(() => {
-      return rowsLast15Days.value.filter((row) =>
-        Object.values(row).some((val) =>
-          val.toString().toLowerCase().includes(filterLast15Days.value.toLowerCase())
+    const filteredCompletedTasks = computed(() => {
+      return rows.value.filter(row => 
+        (row.status.status === 'em testes' || row.status.status === 'em aprovação' || row.status.status === 'finalizado') && 
+        row.status.status !== 'to do' && (
+          (row.name && row.name.toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
+          (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterCompletedTasks.value.toLowerCase()))
         )
       );
     });
 
-    const filteredNext15Days = computed(() => {
-      return rowsNext15Days.value.filter((row) =>
-        Object.values(row).some((val) =>
-          val.toString().toLowerCase().includes(filterNext15Days.value.toLowerCase())
+    const filteredPendingTasks = computed(() => {
+      return rows.value.filter(row => 
+        (row.status.status === 'pendente' || row.status.status === 'aberto') && (
+          (row.name && row.name.toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
+          (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterPendingTasks.value.toLowerCase()))
         )
       );
     });
 
     onMounted(async () => {
       try {
-        const response = await apiGitHub.get('/orgs/sgbrsist/repos');
-        const tasks = response.data;
+        const response = await apiClickUp.post('', {
+          method: 'GET',
+          url: 'https://api.clickup.com/api/v2/team/31136150/task',
+        });
 
-        rowsLast15Days.value = tasks.filter(task => task.period === 'last15Days');
-        rowsNext15Days.value = tasks.filter(task => task.period === 'next15Days');
+        rows.value = response.data.tasks;
       } catch (error) {
         console.error('Erro ao buscar tarefas:', error);
       }
@@ -170,23 +169,25 @@ export default {
 
     const openTaskDetails = (task) => {
       selectedTask.value = task;
+      console.log(task);
       isDialogOpen.value = true;
     };
 
     return {
       columns,
-      filterLast15Days,
-      filterNext15Days,
-      filteredLast15Days,
-      filteredNext15Days,
+      filterCompletedTasks,
+      filterPendingTasks,
+      filteredCompletedTasks,
+      filteredPendingTasks,
       selectedTask,
       isDialogOpen,
       openTaskDetails,
+      current,
     };
   }
 }
 </script>
 
 <style scoped>
-  @import 'src/css/style.css';
+@import 'src/css/style.css';
 </style>
