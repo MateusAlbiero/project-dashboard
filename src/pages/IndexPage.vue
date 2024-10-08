@@ -28,14 +28,27 @@
           row-key="protocol"
           @row-click="openTaskDetails"
         >
+          <template v-slot:header="props">
+            <q-tr :props="props" class="bg-primary text-white">
+              <q-th
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
+                {{ col.label }}
+              </q-th>
+            </q-tr>
+          </template>
+
           <template v-slot:no-data>
-            <div class="center">
+            <div class="full-width row justify-center items-center q-pa-md">
               Nenhum registro encontrado :(
             </div>
           </template>
         </q-table>
       </div>
     </div>
+    
     <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
@@ -58,11 +71,22 @@
           :rows="filteredNext15Days"
           :columns="columns"
           row-key="protocol"
-          header-class="blue-header"
           @row-click="openTaskDetails"
         >
+          <template v-slot:header="props">
+            <q-tr :props="props" class="bg-primary text-white">
+              <q-th
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
+                {{ col.label }}
+              </q-th>
+            </q-tr>
+          </template>
+
           <template v-slot:no-data>
-            <div class="center">
+            <div class="full-width full-height row justify-center items-center">
               Nenhum registro encontrado :(
             </div>
           </template>
