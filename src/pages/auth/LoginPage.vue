@@ -12,7 +12,10 @@
             unmasked-value
             outlined
             lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Informe o login']"
+            :rules="[ 
+              val => (val && val.length > 0) || 'Informe o login',
+              val => (val && val.replace(/\D/g, '').length === 11) || 'O CPF deve conter 11 dígitos'
+            ]"
           />
         </div>
         <div class="input-container">
