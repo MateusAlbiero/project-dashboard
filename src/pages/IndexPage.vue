@@ -31,7 +31,11 @@
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
-              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              <q-th
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
                 {{ col.label }}
               </q-th>
             </q-tr>
@@ -73,7 +77,11 @@
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
-              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              <q-th
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
                 {{ col.label }}
               </q-th>
             </q-tr>
@@ -88,7 +96,14 @@
       </div>
     </div>
 
-    <q-dialog v-model="isDialogOpen" full-height full-width transition-show="scale" transition-hide="scale" class="mt-1">
+    <q-dialog
+      v-model="isDialogOpen"
+      full-height
+      full-width
+      transition-show="scale"
+      transition-hide="scale"
+      class="mt-1"
+    >
       <q-card>
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">Detalhes da Tarefa</div>
@@ -116,10 +131,10 @@ export default {
   setup() {
     const columns = [
       { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, maxWidth: '120px' },
-      { name: 'priority', label: 'Prioridade', field: row => row.priority?.priority || 'N/A', sortable: true },
-      { name: 'assignees.username', label: 'Responsável', field: row => row.assignees?.[0]?.username || 'Não informado' },
-      { name: 'custom_id', label: 'Protocolo', field: 'custom_id' },
-      { name: 'status', label: 'Status', field: row => row.status?.status || 'N/A' },
+      { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'Não informado', sortable: true },
+      { name: 'assignees.username', label: 'Responsável', align: 'center', field: row => row.assignees?.[0]?.username || 'Não informado', sortable: true },
+      { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
+      { name: 'status', label: 'Status', align: 'center', field: row => row.status?.status || 'Não informado', sortable: true },
     ];
 
     const filterCompletedTasks = ref('');
@@ -131,20 +146,24 @@ export default {
 
     const filteredCompletedTasks = computed(() => {
       return rows.value.filter(row => 
-        (row.status.status === 'em testes' || row.status.status === 'em aprovação' || row.status.status === 'finalizado') && 
-        row.status.status !== 'to do' && (
-          (row.name && row.name.toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
-          (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterCompletedTasks.value.toLowerCase()))
-        )
+        row.space.id === '90130860103' &&
+        (row.status.id === 'sc901303007954_qiBEkmhZ' || 
+         row.status.id === 'sc901303007954_VhnEd1ez' || 
+         row.status.id === 'sc901303007954_cq6ukTMC' || 
+         row.status.id === 'sc901303007954_ywDMi6Jm') && 
+        ((row.name && row.name.toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
+         (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterCompletedTasks.value.toLowerCase())))
       );
     });
 
     const filteredPendingTasks = computed(() => {
       return rows.value.filter(row => 
-        (row.status.status === 'pendente' || row.status.status === 'aberto') && (
-          (row.name && row.name.toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
-          (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterPendingTasks.value.toLowerCase()))
-        )
+        row.space.id === '90130860103' &&
+        (row.status.id === 'sc901303007954_tGoRmoEs' || 
+         row.status.id === 'sc901303007954_GXKcfrH2' || 
+         row.status.id === 'sc901303007954_IFDVes5B') &&
+        ((row.name && row.name.toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
+         (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterPendingTasks.value.toLowerCase())))
       );
     });
 
@@ -183,5 +202,5 @@ export default {
 </script>
 
 <style scoped>
-@import 'src/css/style.css';
+  @import 'src/css/style.css';
 </style>
