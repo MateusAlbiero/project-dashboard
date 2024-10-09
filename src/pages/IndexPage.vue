@@ -7,7 +7,7 @@
     <div class="q-mb-xl q-pa-xl modal-dashboard">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
-          <h5>Todas as Tarefas Concluídas</h5>
+          <h5>Tarefas Concluídas</h5>
           <q-input
             outlined
             dense
@@ -20,6 +20,7 @@
             </template>
           </q-input>
         </div>
+
         <q-table
           :dense="$q.screen.lt.md"
           flat
@@ -27,7 +28,6 @@
           :rows="filteredCompletedTasks"
           :columns="columns"
           row-key="protocol"
-          @row-click="openTaskDetails"
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
@@ -38,6 +38,30 @@
               >
                 {{ col.label }}
               </q-th>
+            </q-tr>
+          </template>
+
+          <template #body="props">
+            <q-tr>
+              <q-td
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+                @click="openTaskDetails(props.row)"
+              >
+                <template v-if="col.name === 'origin'">
+                  <q-chip size="5px">
+                    {{ $t(`origin.${col.value}`) }}
+                    <q-tooltip>{{ $t(`origin.${col.value}`) }}</q-tooltip>
+                  </q-chip>
+                </template>
+                <template v-else>
+                  <span class="truncate inline-block max-w-[300px]">
+                    {{ col.value }}
+                    <q-tooltip>{{ col.value }}</q-tooltip>
+                  </span>
+                </template>
+              </q-td>
             </q-tr>
           </template>
 
@@ -53,7 +77,7 @@
     <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
       <div class="q-mb-md">
         <div class="flex-jb flex-ac">
-          <h5>Todas as Tarefas Pendentes</h5>
+          <h5>Tarefas Pendentes</h5>
           <q-input
             outlined
             dense
@@ -66,6 +90,7 @@
             </template>
           </q-input>
         </div>
+
         <q-table
           :dense="$q.screen.lt.md"
           flat
@@ -73,7 +98,6 @@
           :rows="filteredPendingTasks"
           :columns="columns"
           row-key="protocol"
-          @row-click="openTaskDetails"
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
@@ -84,6 +108,30 @@
               >
                 {{ col.label }}
               </q-th>
+            </q-tr>
+          </template>
+
+          <template #body="props">
+            <q-tr>
+              <q-td
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+                @click="openTaskDetails(props.row)"
+              >
+                <template v-if="col.name === 'origin'">
+                  <q-chip size="5px">
+                    {{ $t(`origin.${col.value}`) }}
+                    <q-tooltip>{{ $t(`origin.${col.value}`) }}</q-tooltip>
+                  </q-chip>
+                </template>
+                <template v-else>
+                  <span class="truncate inline-block max-w-[300px]">
+                    {{ col.value }}
+                    <q-tooltip>{{ col.value }}</q-tooltip>
+                  </span>
+                </template>
+              </q-td>
             </q-tr>
           </template>
 
@@ -103,23 +151,30 @@
       transition-show="scale"
       transition-hide="scale"
       class="mt-1"
+      :inert="isDialogOpen"
     >
-      <q-card>
+      <q-card class="q-pa-md">
         <q-card-section class="row items-center q-pb-none">
           <div class="text-h6">Detalhes da Tarefa</div>
-          <q-btn icon="close" flat round dense v-close-popup />
+          <q-btn icon="close" flat round dense @click="isDialogOpen = false" />
           <q-space />
         </q-card-section>
+
         <q-card-section class="q-pt-none">
           <h3>{{ selectedTask.name }}</h3>
-          <div>teste</div>
+          <div><strong>Prioridade:</strong> {{ selectedTask.priority?.priority || 'Não informado' }}</div>
+          <div><strong>Responsável:</strong> {{ selectedTask.assignees?.[0]?.username || 'Não informado' }}</div>
+          <div><strong>Protocolo:</strong> {{ selectedTask.custom_id }}</div>
+          <div><strong>Status:</strong> {{ selectedTask.status?.status || 'Não informado' }}</div>
+          <div><strong>Descrição:</strong> {{ selectedTask.description || 'Não informado' }}</div>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Fechar" color="primary" v-close-popup />
+          <q-btn flat label="Fechar" color="primary" @click="isDialogOpen = false" />
         </q-card-actions>
       </q-card>
     </q-dialog>
+
   </div>
 </template>
 
@@ -130,11 +185,11 @@ import { apiClickUp } from 'src/services/clickupService';
 export default {
   setup() {
     const columns = [
-      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, maxWidth: '120px' },
-      { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'Não informado', sortable: true },
-      { name: 'assignees.username', label: 'Responsável', align: 'center', field: row => row.assignees?.[0]?.username || 'Não informado', sortable: true },
+      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, maxWidth: '120px' },
       { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
       { name: 'status', label: 'Status', align: 'center', field: row => row.status?.status || 'Não informado', sortable: true },
+      { name: 'assignees.username', label: 'Responsável', align: 'center', field: row => row.assignees?.[0]?.username || 'Não informado', sortable: true },
+      { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'Não informado', sortable: true },
     ];
 
     const filterCompletedTasks = ref('');
@@ -142,7 +197,6 @@ export default {
     const rows = ref([]);
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
-    const current = ref(3);
 
     const filteredCompletedTasks = computed(() => {
       return rows.value.filter(row => 
@@ -182,8 +236,16 @@ export default {
 
     const openTaskDetails = (task) => {
       selectedTask.value = task;
-      console.log(task);
       isDialogOpen.value = true;
+    };
+
+    const formatValue = (value) => {
+      const formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      return value >= 0 ? formatter.format(value) : `- ${formatter.format(Math.abs(value))}`;
     };
 
     return {
@@ -195,7 +257,7 @@ export default {
       selectedTask,
       isDialogOpen,
       openTaskDetails,
-      current,
+      formatValue,
     };
   }
 }
