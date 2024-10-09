@@ -21,6 +21,7 @@
           </q-input>
         </div>
         <q-table
+          :dense="$q.screen.lt.md"
           flat
           bordered
           :rows="filteredCompletedTasks"
@@ -30,11 +31,7 @@
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
-              <q-th
-                v-for="col in props.cols"
-                :key="col.name"
-                :props="props"
-              >
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
                 {{ col.label }}
               </q-th>
             </q-tr>
@@ -66,6 +63,7 @@
           </q-input>
         </div>
         <q-table
+          :dense="$q.screen.lt.md"
           flat
           bordered
           :rows="filteredPendingTasks"
@@ -75,11 +73,7 @@
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-primary text-white">
-              <q-th
-                v-for="col in props.cols"
-                :key="col.name"
-                :props="props"
-              >
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
                 {{ col.label }}
               </q-th>
             </q-tr>
