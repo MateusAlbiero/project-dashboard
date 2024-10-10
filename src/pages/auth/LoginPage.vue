@@ -7,13 +7,13 @@
         <div class="input-container">
           <q-input
             v-model="cpf"
-            label="Login"
+            label="CPF"
             mask="###.###.###-##"
             unmasked-value
             outlined
             lazy-rules
             :rules="[ 
-              val => (val && val.length > 0) || 'Informe o login',
+              val => (val && val.length > 0) || 'Informe o CPF',
               val => (val && val.replace(/\D/g, '').length === 11) || 'O CPF deve conter 11 dígitos'
             ]"
           />
