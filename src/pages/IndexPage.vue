@@ -52,12 +52,39 @@
                   @click="openTaskDetails(props.row)"
                 >
                   <template v-if="col.name === 'status'">
-                    <q-chip size="12px">
+                    <q-chip
+                      size="12px"
+                      :class="{
+                        'bg-green-9 text-white':
+                          col.value === 'finalizado',
+                        'bg-orange-8 text-white':
+                          col.value === 'testado',
+                        'bg-yellow-8 text-white':
+                          col.value === 'em testes'
+                      }"
+                    >
                       {{ col.value }}
+                      <q-tooltip>{{ col.value }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'priority'">
-                    <q-chip size="12px">
+                    <q-chip
+                      size="12px"
+                      :class="{
+                        'bg-red-8 text-white':
+                          col.value === 'urgent',
+                        'bg-yellow-8 text-white':
+                          col.value === 'pending',
+                        'bg-green-9 text-white':
+                          col.value === 'completed',
+                        'bg-orange-8 text-white':
+                          col.value === 'high',
+                        'bg-gray-9 text-white':
+                          col.value === 'low',
+                        'bg-blue-8 text-white':
+                          col.value === 'normal',
+                      }"
+                    >
                       {{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}
                     </q-chip>
                   </template>
@@ -137,7 +164,23 @@
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'priority'">
-                    <q-chip size="12px">
+                    <q-chip
+                      size="12px"
+                      :class="{
+                        'bg-red-8 text-white':
+                          col.value === 'urgent',
+                        'bg-yellow-8 text-white':
+                          col.value === 'pending',
+                        'bg-green-9 text-white':
+                          col.value === 'completed',
+                        'bg-orange-8 text-white':
+                          col.value === 'high',
+                        'bg-gray-9 text-white':
+                          col.value === 'low',
+                        'bg-blue-8 text-white':
+                          col.value === 'normal',
+                      }"
+                    >
                       {{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}
                     </q-chip>
                   </template>
