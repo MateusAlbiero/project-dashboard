@@ -81,7 +81,7 @@
                           col.value === 'completed',
                         'bg-orange-8 text-white':
                           col.value === 'high',
-                        'bg-gray-9 text-white':
+                        'bg-gray text-black':
                           col.value === 'low',
                         'bg-blue-8 text-white':
                           col.value === 'normal',
@@ -261,7 +261,7 @@ import { apiClickUp } from 'src/services/clickupService';
 export default {
   setup() {
     const columns = [
-      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, class: 'truncate ', style: 'overflow: hidden; max-width: 400px;' },
+      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, class: 'truncate ', style: 'overflow: hidden; max-width: 400px; text-overflow: ellipsis;' },
       { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
       { name: 'status', label: 'Status', align: 'center', field: row => row.status?.id || 'Não informado', sortable: true },
       { name: 'responsible', label: 'Responsáveis', align: 'center', field: row => row.assignees.map(a => a.username).join(', ') || 'Não informado', sortable: true },
