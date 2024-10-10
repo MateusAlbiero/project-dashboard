@@ -55,15 +55,17 @@
                     <q-chip
                       size="12px"
                       :class="{
-                        'bg-green-9 text-white':
-                          col.value === 'finalizado',
                         'bg-orange-8 text-white':
-                          col.value === 'testado',
+                          col.value === 'sc901303007954_qiBEkmhZ',
                         'bg-yellow-8 text-white':
-                          col.value === 'em testes'
+                          col.value === 'sc901303007954_VhnEd1ez',
+                        'bg-blue-8 text-white':
+                          col.value === 'sc901303007954_qiBEkmhZ',
+                        'bg-green-8 text-white':
+                          col.value === 'sc901303007954_cq6ukTMC'
                       }"
                     >
-                      {{ col.value }}
+                      {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
                       <q-tooltip>{{ col.value }}</q-tooltip>
                     </q-chip>
                   </template>
@@ -159,8 +161,19 @@
                   @click="openTaskDetails(props.row)"
                 >
                   <template v-if="col.name === 'status'">
-                    <q-chip size="12px">
-                      {{ col.value }}
+                    <q-chip
+                      size="12px"
+                      :class="{
+                        'bg-gray text-black':
+                          col.value === 'sc901303007954_tGoRmoEs',
+                        'bg-purple-8 text-white':
+                          col.value === 'sc901303007954_GXKcfrH2',
+                        'bg-orange-8 text-white':
+                          col.value === 'sc901303007954_IFDVes5B'
+                      }"
+                    >
+                      {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
+                      <q-tooltip>{{ col.value }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'priority'">
@@ -175,7 +188,7 @@
                           col.value === 'completed',
                         'bg-orange-8 text-white':
                           col.value === 'high',
-                        'bg-gray-9 text-white':
+                        'bg-gray text-black':
                           col.value === 'low',
                         'bg-blue-8 text-white':
                           col.value === 'normal',
@@ -250,7 +263,7 @@ export default {
     const columns = [
       { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, class: 'truncate ', style: 'overflow: hidden; max-width: 400px;' },
       { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
-      { name: 'status', label: 'Status', align: 'center', field: row => row.status?.status || 'Não informado', sortable: true },
+      { name: 'status', label: 'Status', align: 'center', field: row => row.status?.id || 'Não informado', sortable: true },
       { name: 'responsible', label: 'Responsáveis', align: 'center', field: row => row.assignees.map(a => a.username).join(', ') || 'Não informado', sortable: true },
       { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'normal', sortable: true },
     ];
