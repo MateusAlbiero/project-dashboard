@@ -58,7 +58,7 @@
 }
 
 .error-message {
-    color: red;
+    color: rgb(170, 0, 0);
 }
 
 .card {
@@ -84,6 +84,21 @@
 .blue-header {
     background-color: blue;
     color: white;
+}
+
+.description-div {
+    border: 0.1rem solid #a1a1a1;
+    border-radius: 12px;
+    height: 300px;
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    height: auto;
+}
+
+.details-task {
+    display: grid;
+    margin-right: 1rem;
 }
 
 @import url('font.css');
