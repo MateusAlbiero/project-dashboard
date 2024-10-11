@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-primary text-white">
-        <div class="q-pa-md q-gutter-sm">
+        <!-- <div class="q-pa-md q-gutter-sm">
           <q-btn
             :color="selectedButton == 'dashboard' ? 'white' : 'blue'"
             :text-color="selectedButton == 'dashboard' ? 'black' : 'white'"
@@ -21,7 +21,7 @@
           >
             <q-tooltip>Tarefas</q-tooltip>
           </q-btn>
-        </div>
+        </div> -->
         <q-space />
         <div class="search-container">
           <q-input
@@ -47,27 +47,31 @@
           </q-input>
         </div>
         <q-space />
-        <q-btn round>
-          <q-avatar size="40px">
-            <img src="/img/Mateus_FundoAzul.png" />
-            <q-menu>
-              <div class="row no-wrap q-pa-md column items-center">
-                <q-avatar size="72px">
-                  <img src="/img/Mateus_FundoAzul.png" />
-                </q-avatar>
-                <div class="text-subtitle1 q-mt-md q-mb-xs">Mateus</div>
-                <q-btn
-                  color="blue"
-                  label="Encerrar sessão"
-                  push
-                  size="sm"
-                  @click="logout"
-                  v-close-popup
-                />
-              </div>
-            </q-menu>
-          </q-avatar>
+        <q-btn
+          icon="logout"
+          size="15px"
+        >
+          <q-menu>
+            <div class="row no-wrap q-pa-md column items-center">
+              <!-- <img
+                src="/img/user_placeholder.png"
+                alt="User"
+                class="q-mr-md"
+                style="width: 72px; height: 72px; border-radius: 50%;"
+              /> -->
+              <div class="text-subtitle1 q-mt-xl q-mb-xs">Mateus</div>
+              <q-btn
+                color="blue"
+                label="Encerrar sessão"
+                push
+                size="sm"
+                @click="logout"
+                v-close-popup
+              />
+            </div>
+          </q-menu>
         </q-btn>
+
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -80,13 +84,13 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const selectedButton = ref('');
+// const selectedButton = ref('');
 const searchQuery = ref('');
 const router = useRouter();
 
-function selectButton(buttonName: string) {
-  selectedButton.value = buttonName;
-}
+// function selectButton(buttonName: string) {
+//   selectedButton.value = buttonName;
+// }
 
 function logout() {
   router.push('/login');
