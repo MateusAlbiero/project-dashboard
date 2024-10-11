@@ -235,22 +235,100 @@
 
       <q-card class="q-pa-md">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h5">Detalhes da tarefa</div>
+          <div class="text-h6 text-grey-8">Detalhes da tarefa</div>
           <q-space />
           <q-btn icon="close" flat round dense @click="isDialogOpen = false" />
         </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <h3>{{ selectedTask.name }}</h3>
-          <div><strong>Prioridade:</strong> {{ selectedTask.priority?.priority || 'Não informado' }}</div>
-          <div><strong>Responsáveis:</strong> {{ selectedTask.assignees.map(a => a.username).join(', ') || 'Não informado' }}</div>
-          <div><strong>Protocolo:</strong> {{ selectedTask.custom_id }}</div>
-          <div><strong>Status:</strong> {{ selectedTask.status?.status || 'Não informado' }}</div>
-          <div><strong>Descrição:</strong> {{ selectedTask.description || 'Não informado' }}</div>
+        <q-card-section class="q-pt-none mr-5 ml-5">
+          <h5>{{ selectedTask.name }}</h5>
+          <div class="flex-jb">
+            <div class="flex-js">
+              <section class="details-task">
+                <strong class="mb-05"><q-icon name="description" class="mr-05"/>Protocolo</strong>
+                <strong class="mb-05"><q-icon name="info" class="mr-05"/>Status</strong>
+                <strong class="mb-05"><q-icon name="label" class="mr-05"/>Etiquetas</strong>
+              </section>
+              <section>
+                <div>{{ selectedTask.custom_id ? selectedTask.custom_id : 'Sem protocolo' }}</div>
+                  <div>
+                    <q-chip
+                      size="12px"
+                      :class="{
+                        'bg-orange-8 text-white':
+                          selectedTask.status?.id === 'sc901303007954_qiBEkmhZ',
+                        'bg-yellow-8 text-white':
+                          selectedTask.status?.id === 'sc901303007954_VhnEd1ez',
+                        'bg-blue-8 text-white':
+                          selectedTask.status?.id === 'sc901303007954_qiBEkmhZ',
+                        'bg-green-8 text-white':
+                          selectedTask.status?.id === 'sc901303007954_cq6ukTMC',
+                        'bg-gray text-black':
+                          selectedTask.status?.id === 'sc901303007954_tGoRmoEs',
+                        'bg-purple-8 text-white mb-05':
+                          selectedTask.status?.id === 'sc901303007954_GXKcfrH2',
+                        'bg-orange-8 text-white':
+                          selectedTask.status?.id === 'sc901303007954_IFDVes5B'
+                      }"
+                    >
+                      {{ selectedTask.status?.id ? $t(`status.${selectedTask.status?.id}`) : 'Aberto' }}
+                    </q-chip>
+                  </div>
+                  <span v-if="selectedTask.tags && selectedTask.tags.length > 0">
+                    <span v-for="tag in selectedTask.tags" :key="tag.name">
+                      <q-chip
+                          size="12px"
+                          :class="'bg-blue-8 text-white'"
+                      >
+                        {{ tag.name }}
+                      </q-chip>
+                    </span>
+                  </span>
+                  <span v-else>Vazio</span>
+              </section>
+            </div>
+            <div class="flex-js">
+              <section class="details-task">
+                <strong class="mb-05"><q-icon name="supervisor_account" class="mr-05"/>Responsáveis</strong>
+                <strong class="mb-05"><q-icon name="flag" class="mr-05"/>Prioridade</strong>
+                <strong class="mb-05"><q-icon name="build" class="mr-05"/>Técnico responsável</strong>
+              </section>
+              <section>
+                <div> {{ selectedTask.assignees.map(a => a.username).join(', ') || 'Não informado' }} </div>
+                <div>
+                  <q-chip
+                    size="12px"
+                    :class="{
+                      'bg-red-8 text-white':
+                        selectedTask.priority?.priority === 'urgent',
+                      'bg-yellow-8 text-white':
+                        selectedTask.priority?.priority === 'pending',
+                      'bg-green-9 text-white':
+                        selectedTask.priority?.priority === 'completed',
+                      'bg-orange-8 text-white':
+                        selectedTask.priority?.priority === 'high',
+                      'bg-gray text-black':
+                        selectedTask.priority?.priority === 'low',
+                      'bg-blue-8 text-white':
+                        selectedTask.priority?.priority === 'normal',
+                      'bg-blue-8 text-white':
+                        selectedTask.priority?.priority === undefined
+                    }"
+                  >
+                    {{ selectedTask.priority ? $t(`priority.${selectedTask.priority?.priority}`) : 'Normal' }}
+                  </q-chip>
+                </div>
+              </section>
+            </div>
+          </div>
+          <section class="mt-2 text-grey-8">Descrição</section>
+          <q-scroll-area class="description-div q-pa-md q-mt-md q-border-radius" style="height: 200px;">
+            <div>{{ selectedTask.description }}</div>
+          </q-scroll-area>
         </q-card-section>
 
         <q-card-actions>
-          <q-btn flat label="Fechar" color="primary" @click="isDialogOpen = false" />
+          <q-btn flat label="Abrir tarefa no ClickUp" color="primary" @click="openClickUp(selectedTask.url)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -340,6 +418,12 @@ export default {
       return value >= 0 ? formatter.format(value) : `- ${formatter.format(Math.abs(value))}`;
     };
 
+    const openClickUp = (url) => {
+      if (url) {
+        window.open(url, '_blank');
+      }
+    };
+
     return {
       columns,
       filterCompletedTasks,
@@ -350,6 +434,7 @@ export default {
       isDialogOpen,
       openTaskDetails,
       formatValue,
+      openClickUp,
     };
   }
 }
