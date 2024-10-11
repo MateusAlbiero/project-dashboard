@@ -66,7 +66,7 @@
                       }"
                     >
                       {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
-                      <q-tooltip>{{ col.value }}</q-tooltip>
+                      <q-tooltip>{{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'priority'">
@@ -88,6 +88,7 @@
                       }"
                     >
                       {{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}
+                      <q-tooltip>{{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'assignees.username'">
@@ -173,7 +174,7 @@
                       }"
                     >
                       {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
-                      <q-tooltip>{{ col.value }}</q-tooltip>
+                      <q-tooltip>{{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'priority'">
@@ -195,6 +196,7 @@
                       }"
                     >
                       {{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}
+                      <q-tooltip>{{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}</q-tooltip>
                     </q-chip>
                   </template>
                   <template v-else-if="col.name === 'assignees.username'">
@@ -228,13 +230,14 @@
       transition-show="scale"
       transition-hide="scale"
       class="mt-1"
-      :inert="isDialogOpen"
+      :inert="!isDialogOpen"
     >
+
       <q-card class="q-pa-md">
         <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Detalhes da Tarefa</div>
-          <q-btn icon="close" flat round dense @click="isDialogOpen = false" />
+          <div class="text-h5">Detalhes da tarefa</div>
           <q-space />
+          <q-btn icon="close" flat round dense @click="isDialogOpen = false" />
         </q-card-section>
 
         <q-card-section class="q-pt-none">
