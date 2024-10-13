@@ -78,7 +78,12 @@ export default defineComponent({
           password: password.value,
         });
 
-        console.log(response.data);
+        const token = response.data.token;
+        const expirationTime = Date.now() + 8 * 60 * 60 * 1000;
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('expiration', expirationTime.toString());
+
         router.push('/home');
       } catch (error: unknown) {
         const axiosError = error as AxiosError;
@@ -96,12 +101,12 @@ export default defineComponent({
       isPwd,
       handleLogin,
       backgroundImage,
-      errorMessage
+      errorMessage,
     };
   },
 });
 </script>
 
 <style scoped>
-@import 'src/css/style.css';
+  @import 'src/css/style.css';
 </style>
