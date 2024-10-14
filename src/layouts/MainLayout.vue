@@ -49,27 +49,10 @@
         <q-space />
         <q-btn
           icon="logout"
-          size="15px"
+          size="10px"
+          push
+          @click="logout"
         >
-          <q-menu>
-            <div class="row no-wrap q-pa-md column items-center">
-              <!-- <img
-                src="/img/user_placeholder.png"
-                alt="User"
-                class="q-mr-md"
-                style="width: 72px; height: 72px; border-radius: 50%;"
-              /> -->
-              <div class="text-subtitle1 q-mt-xl q-mb-xs">Mateus</div>
-              <q-btn
-                color="blue"
-                label="Encerrar sessão"
-                push
-                size="sm"
-                @click="logout"
-                v-close-popup
-              />
-            </div>
-          </q-menu>
         </q-btn>
 
       </q-toolbar>
@@ -93,6 +76,8 @@ const router = useRouter();
 // }
 
 function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('expiration');
   router.push('/login');
 }
 </script>
