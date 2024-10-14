@@ -51,10 +51,9 @@
           icon="logout"
           size="10px"
           push
-          @click="logout"
+          @click="confirmLogout"
         >
         </q-btn>
-
       </q-toolbar>
     </q-header>
     <q-page-container>
@@ -66,14 +65,24 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 // const selectedButton = ref('');
 const searchQuery = ref('');
 const router = useRouter();
+const $q = useQuasar();
 
-// function selectButton(buttonName: string) {
-//   selectedButton.value = buttonName;
-// }
+function confirmLogout() {
+  $q.dialog({
+    title: 'Encerrar sessão',
+    message: 'Você realmente deseja sair?',
+    cancel: true,
+    persistent: true,
+    ok: {label: 'Sair'},
+  }).onOk(() => {
+    logout();
+  });
+}
 
 function logout() {
   localStorage.removeItem('token');
