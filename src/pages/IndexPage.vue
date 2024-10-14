@@ -295,28 +295,26 @@
               </section>
               <section>
                 <div> {{ selectedTask.assignees.map(a => a.username).join(', ') || 'Não informado' }} </div>
-                <div>
+                <div class="mb-025">
                   <q-chip
                     size="12px"
                     :class="{
-                      'bg-red-8 text-white':
-                        selectedTask.priority?.priority === 'urgent',
-                      'bg-yellow-8 text-white':
-                        selectedTask.priority?.priority === 'pending',
-                      'bg-green-9 text-white':
-                        selectedTask.priority?.priority === 'completed',
-                      'bg-orange-8 text-white':
-                        selectedTask.priority?.priority === 'high',
-                      'bg-gray text-black':
-                        selectedTask.priority?.priority === 'low',
-                      'bg-blue-8 text-white':
-                        selectedTask.priority?.priority === 'normal',
-                      'bg-blue-8 text-white':
-                        selectedTask.priority?.priority === undefined
+                      'bg-red-8 text-white': selectedTask.priority?.priority === 'urgent',
+                      'bg-yellow-8 text-white': selectedTask.priority?.priority === 'pending',
+                      'bg-green-9 text-white': selectedTask.priority?.priority === 'completed',
+                      'bg-orange-8 text-white': selectedTask.priority?.priority === 'high',
+                      'bg-gray text-black': selectedTask.priority?.priority === 'low',
+                      'bg-blue-8 text-white': selectedTask.priority?.priority === 'normal',
+                      'bg-blue-8 text-white': selectedTask.priority?.priority === undefined
                     }"
                   >
                     {{ selectedTask.priority ? $t(`priority.${selectedTask.priority?.priority}`) : 'Normal' }}
                   </q-chip>
+                </div>
+                <div>
+                  {{ selectedTask.custom_fields ? 
+                    (selectedTask.custom_fields.find(field => field.id === '74deb46b-1412-4c18-85b3-d029aa21c523')?.value || 'Não informado') 
+                    : 'Não informado' }} 
                 </div>
               </section>
             </div>
@@ -327,11 +325,12 @@
           </q-scroll-area>
         </q-card-section>
 
-        <q-card-actions>
-          <q-btn flat label="Abrir tarefa no ClickUp" color="primary" @click="openClickUp(selectedTask.url)" />
+        <q-card-actions class="justify-center">
+          <q-btn push align="between" color="primary" label="Abrir tarefa no ClickUp" icon="open_in_new" @click="openClickUp(selectedTask.url)" />
         </q-card-actions>
       </q-card>
     </q-dialog>
+
   </div>
 </template>
 
@@ -421,6 +420,8 @@ export default {
     const openClickUp = (url) => {
       if (url) {
         window.open(url, '_blank');
+      } else {
+        console.log('URL inválida');
       }
     };
 
