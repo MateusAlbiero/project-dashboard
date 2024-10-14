@@ -1,44 +1,61 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar class="bg-primary text-white">
+        <!-- <div class="q-pa-md q-gutter-sm">
+          <q-btn
+            :color="selectedButton == 'dashboard' ? 'white' : 'blue'"
+            :text-color="selectedButton == 'dashboard' ? 'black' : 'white'"
+            label="Dashboard"
+            class="q-mt-md"
+            @click="selectButton('dashboard')"
+          >
+            <q-tooltip>Dashboard</q-tooltip>
+          </q-btn>
+          <q-btn
+            :color="selectedButton == 'tarefas' ? 'white' : 'blue'"
+            :text-color="selectedButton == 'tarefas' ? 'black' : 'white'"
+            label="Tarefas"
+            class="q-mt-md"
+            @click="selectButton('tarefas')"
+          >
+            <q-tooltip>Tarefas</q-tooltip>
+          </q-btn>
+        </div> -->
+        <q-space />
+        <div class="search-container">
+          <q-input
+            dark
+            dense
+            standout
+            v-model="searchQuery"
+            input-class="text-left"
+            class="search-bar"
+            debounce="300"
+          >
+            <template v-slot:prepend>
+              <q-icon name="search" />
+            </template>
+            <template v-slot:append>
+              <q-icon
+                v-if="searchQuery !== ''"
+                name="clear"
+                class="cursor-pointer"
+                @click="searchQuery = ''"
+              />
+            </template>
+          </q-input>
+        </div>
+        <q-space />
         <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+          icon="logout"
+          size="10px"
+          push
+          @click="confirmLogout"
+        >
+        </q-btn>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -47,60 +64,33 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
-defineOptions({
-  name: 'MainLayout'
-});
+// const selectedButton = ref('');
+const searchQuery = ref('');
+const router = useRouter();
+const $q = useQuasar();
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
+function confirmLogout() {
+  $q.dialog({
+    title: 'Encerrar sessão',
+    message: 'Você realmente deseja sair?',
+    cancel: true,
+    persistent: true,
+    ok: {label: 'Sair'},
+  }).onOk(() => {
+    logout();
+  });
+}
 
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('expiration');
+  router.push('/login');
 }
 </script>
+
+<style scoped>
+  @import 'src/css/style.css';
+</style>
