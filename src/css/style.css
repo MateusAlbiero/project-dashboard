@@ -336,6 +336,14 @@
 
 .fnt0 { font-weight: normal; font-size: 2065px; font-family: 'Poppins'; }
 
+@media only screen and (max-width: 900px) {
+    .modal-dashboard {
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+}
+
+
 @media only screen and (min-width: 768px) {
     .cl {
         flex-basis: 0;
@@ -390,6 +398,25 @@
     .cl-1 {
         flex: 0 0 8.3333333333%;
         max-width: 8.3333333333%;
+    }
+}
+
+@media only screen and (max-width: 695px) {
+    .modal-dashboard {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+@media only screen and (max-width: 615px) {
+    .modal-dashboard {
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+
+    .pending-tasks {
+        display: grid;
+        margin-bottom: 1rem;
     }
 }
 
