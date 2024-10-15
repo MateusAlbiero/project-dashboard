@@ -332,7 +332,11 @@
           </div>
           <section class="mt-3 text-grey-8">Descrição</section>
           <q-scroll-area class="description-div q-pa-md q-mt-md q-border-radius" style="height: 300px;">
-            <div>{{ selectedTask.description }}</div>
+            <div>
+              <div v-for="(line, index) in selectedTask.description.split('\n')" :key="index">
+                {{ line }}
+              </div>
+            </div>
           </q-scroll-area>
         </q-card-section>
 
