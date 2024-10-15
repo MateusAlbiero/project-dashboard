@@ -6,7 +6,7 @@
     <div>
       <div class="q-mb-xl q-pa-xl modal-dashboard">
         <div class="q-mb-md">
-          <div class="flex-jb flex-ac">
+          <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas concluídas</h5>
             <q-input
               outlined
@@ -116,7 +116,7 @@
 
       <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
         <div class="q-mb-md">
-          <div class="flex-jb flex-ac">
+          <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas pendentes</h5>
             <q-input
               outlined
