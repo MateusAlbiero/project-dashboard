@@ -2,63 +2,42 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-primary text-white">
-        <!-- <div class="q-pa-md q-gutter-sm">
-          <q-btn
-            :color="selectedButton == 'dashboard' ? 'white' : 'blue'"
-            :text-color="selectedButton == 'dashboard' ? 'black' : 'white'"
-            label="Dashboard"
-            class="q-mt-md"
-            @click="selectButton('dashboard')"
-          >
-            <q-tooltip>Dashboard</q-tooltip>
-          </q-btn>
-          <q-btn
-            :color="selectedButton == 'tarefas' ? 'white' : 'blue'"
-            :text-color="selectedButton == 'tarefas' ? 'black' : 'white'"
-            label="Tarefas"
-            class="q-mt-md"
-            @click="selectButton('tarefas')"
-          >
-            <q-tooltip>Tarefas</q-tooltip>
-          </q-btn>
-        </div> -->
         <q-space />
         <div class="search-container">
-          <q-input
-            dark
-            dense
-            standout
-            v-model="searchQuery"
-            input-class="text-left"
-            class="search-bar"
-            debounce="300"
-          >
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                v-if="searchQuery !== ''"
-                name="clear"
-                class="cursor-pointer"
-                @click="searchQuery = ''"
-              />
-            </template>
-          </q-input>
+          <q-btn
+            align="between"
+            icon="search"
+            class="search-button"
+            @click="openSearchModal"
+          />
         </div>
         <q-space />
         <q-btn
           icon="logout"
-          size="10px"
-          push
+          size="sm"
           @click="confirmLogout"
-        >
-        </q-btn>
+        />
       </q-toolbar>
     </q-header>
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-dialog v-model="searchDialog">
+      <q-card class="card h-200">
+        <q-card-section>
+          <q-input
+            type="search"
+            hint="Busque qualquer tarefa por descrição, protocolo, status ou responsáveis."
+            class="q-dialog--xl"
+            v-model="searchQuery"
+            autofocus
+            label="Pesquisar"
+            @keyup.enter="performSearch"
+          />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -67,10 +46,18 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
-// const selectedButton = ref('');
-const searchQuery = ref('');
 const router = useRouter();
 const $q = useQuasar();
+const searchDialog = ref(false);
+const searchQuery = ref('');
+
+function openSearchModal() {
+  searchDialog.value = true;
+}
+
+function performSearch() {
+
+}
 
 function confirmLogout() {
   $q.dialog({
@@ -78,7 +65,7 @@ function confirmLogout() {
     message: 'Você realmente deseja sair?',
     cancel: true,
     persistent: true,
-    ok: {label: 'Sair'},
+    ok: { label: 'Sair' },
   }).onOk(() => {
     logout();
   });
