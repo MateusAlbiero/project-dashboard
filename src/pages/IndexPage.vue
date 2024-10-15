@@ -351,10 +351,12 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
+import { useQuasar } from 'quasar';
 import { apiClickUp } from 'src/services/clickupService';
 
 export default {
   setup() {
+    const $q = useQuasar();
     const columns = [
       { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, class: 'truncate ', style: 'overflow: hidden; max-width: 400px; text-overflow: ellipsis;' },
       { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
@@ -366,6 +368,7 @@ export default {
     const filterCompletedTasks = ref('');
     const filterPendingTasks = ref('');
     const rows = ref([]);
+    const isLoading = ref(true);
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
 
@@ -400,6 +403,7 @@ export default {
 
     onMounted(async () => {
       try {
+        $q.loading.show();
         let page = 0;
         let hasMorePages = true;
 
@@ -415,6 +419,9 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao buscar tarefas:', error);
+      } finally {
+        $q.loading.hide();
+        isLoading.value = false;
       }
     });
 
