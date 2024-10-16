@@ -1,9 +1,9 @@
 <template>
-  <div class="q-pa-xl dashboard-container">
-    <div class="flex-jb q-toolbar-title">
+  <div class="dashboard-container">
+    <div class="q-toolbar-title ml-1">
       <h4>Dashboard</h4>
     </div>
-    <div>
+    <div class="flex-jb">
       <div class="q-mb-xl q-pa-xl modal-dashboard">
         <div class="q-mb-md">
           <div class="pending-tasks flex-jb flex-ac">
@@ -356,11 +356,11 @@ export default {
   setup() {
     const $q = useQuasar();
     const columns = [
-      { name: 'name', required: true, label: 'Descrição', align: 'left', field: row => row.name, sortable: true, class: 'truncate ', style: 'overflow: hidden; max-width: 400px; text-overflow: ellipsis;' },
-      { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', sortable: true },
-      { name: 'status', label: 'Status', align: 'center', field: row => row.status?.id || 'Não informado', sortable: true },
-      { name: 'responsible', label: 'Responsáveis', align: 'center', field: row => row.assignees.map(a => a.username).join(', ') || 'Não informado', sortable: true },
-      { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'normal', sortable: true },
+      { name: 'name', label: 'Descrição', align: 'left', field: row => row.name,  style: 'overflow: hidden; min-width: 300px; max-width: 300px; text-overflow: ellipsis;' },
+      { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', width: '100px' },
+      { name: 'status', label: 'Status', align: 'center', field: row => row.status?.id || 'Não informado', style: 'min-width: 150px; max-width: 150px;' },
+      { name: 'responsible', label: 'Responsáveis', align: 'center', field: row => row.assignees.map(a => a.username).join(', ') || 'Não informado', style: 'overflow: hidden; min-width: 150px; max-width: 150px; text-overflow: ellipsis;' },
+      { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'normal', width: '100px', style: 'min-width: 120px; max-width: 120px;' },
     ];
 
     const filterCompletedTasks = ref('');
