@@ -16,6 +16,7 @@
               val => (val && val.length > 0) || 'Informe o CPF',
               val => (val && val.replace(/\D/g, '').length === 11) || 'O CPF deve conter 11 dígitos'
             ]"
+            autofocus
           />
         </div>
         <div class="input-container">
