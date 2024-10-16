@@ -312,6 +312,7 @@
 
 .position-r { position: relative; }
 .position-a { position: absolute; }
+.cursor-pointer { cursor: pointer; }
 .nowrap { white-space: nowrap; }
 .d-none { display: none!important; }
 .d-block { display: block; }

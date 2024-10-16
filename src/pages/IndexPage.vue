@@ -44,12 +44,11 @@
             </template>
 
             <template #body="props">
-              <q-tr>
+              <q-tr class="cursor-pointer" @click="openTaskDetails(props.row)">
                 <q-td
                   v-for="col in props.cols"
                   :key="col.name"
                   :props="props"
-                  @click="openTaskDetails(props.row)"
                 >
                   <template v-if="col.name === 'status'">
                     <q-chip
@@ -154,12 +153,11 @@
             </template>
 
             <template #body="props">
-              <q-tr>
+              <q-tr class="cursor-pointer" @click="openTaskDetails(props.row)">
                 <q-td
                   v-for="col in props.cols"
                   :key="col.name"
                   :props="props"
-                  @click="openTaskDetails(props.row)"
                 >
                   <template v-if="col.name === 'status'">
                     <q-chip
