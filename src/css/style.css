@@ -306,6 +306,10 @@
 .mw-255 { min-width: 255px; }
 .mw-290 { min-width: 290px; }
 
+.mh-100 { min-height: 100px; }
+.mh-200 { min-height: 200px; }
+.mh-300 { min-height: 300px; }
+
 .position-r { position: relative; }
 .position-a { position: absolute; }
 .nowrap { white-space: nowrap; }
