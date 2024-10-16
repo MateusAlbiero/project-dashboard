@@ -49,7 +49,7 @@
               >
                 <q-item-section>
                   <q-item-label>{{ tarefa.name }}</q-item-label>
-                  <q-item-label caption>{{ tarefa.custom_id }}</q-item-label>
+                  <q-item-label caption>{{ tarefa.custom_id }} | {{tarefa.status ? tarefa.status.status : 'Aberto' }} | {{ tarefa.assignees.map(a => a.username).join(', ') || 'Não informado' }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
