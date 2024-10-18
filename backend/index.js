@@ -32,6 +32,23 @@ app.post('/api/clickup', async (req, res) => {
     }
 });
 
+app.post('/api/github', async (req, res) => {
+    try {
+        const response = await axios({
+            method: req.body.method || 'GET',
+            url: req.body.url,
+            headers: {
+                'Authorization': `token ${process.env.GITHUB_API_KEY}`,
+                ...req.body.headers,
+            },
+            data: req.body.data,
+        });
+        res.json(response.data);
+    } catch (error) {
+        res.status(error.response?.status || 500).json({ message: error.message });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Proxy server running on http://localhost:${PORT}`);
 });
