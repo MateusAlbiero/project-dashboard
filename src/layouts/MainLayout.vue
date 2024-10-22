@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-primary text-white">
-        <q-space />
+        <q-toolbar-title>Dashboard</q-toolbar-title>
         <div class="search-container">
           <q-btn
             align="between"
