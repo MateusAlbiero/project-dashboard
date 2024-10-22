@@ -101,6 +101,12 @@
     margin-right: 1rem;
 }
 
+#status-chart {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 @import url('font.css');
 
 .flex, .flex-c, .flex-cr, .flex-r, .flex-w, .flex-jb, .flex-jc, .flex-js, .flex-je, .flex-as, .flex-ac, .flex-ae, .flex-ja, .flex-ab, .flex-jse {
