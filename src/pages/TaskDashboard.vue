@@ -1,8 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="q-toolbar-title ml-1">
-      <h4>Dashboard</h4>
-    </div>
+    <div id="status-chart" style="height: 400px;"></div>
     <div class="flex-jb">
       <div class="q-mb-xl q-pa-xl modal-dashboard">
         <div class="q-mb-md">
@@ -252,8 +250,10 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import * as echarts from 'echarts';
 import { apiClickUp } from 'src/services/clickupService';
 import TaskDetails from 'src/components/TaskDetails.vue';
+import { i18n } from 'src/boot/i18n';
 
 export default {
   components: {
@@ -275,6 +275,7 @@ export default {
     const isLoading = ref(true);
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
+    const { t: $t } = i18n.global;
 
     const filteredCompletedTasks = computed(() => {
       return rows.value.filter(row => 
@@ -305,7 +306,7 @@ export default {
       );
     });
 
-    onMounted(async () => {
+    const loadTasks = async () => {
       try {
         $q.loading.show();
         let page = 0;
@@ -326,8 +327,57 @@ export default {
       } finally {
         $q.loading.hide();
         isLoading.value = false;
+        renderChart();
       }
-    });
+    };
+
+    const renderChart = () => {
+      const statusCounts = rows.value.reduce((acc, task) => {
+        const status = task.status?.id ? $t(`status.${task.status?.id}`) : 'Aberto';
+        acc[status] = (acc[status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const chartData = Object.entries(statusCounts).map(([status, count]) => ({
+        value: count,
+        name: status,
+      }));
+
+      const chartDom = document.getElementById('status-chart');
+      const myChart = echarts.init(chartDom);
+
+      const option = {
+        title: {
+          text: 'Status das Tarefas',
+          subtext: 'Gráfico de tarefas com seus respectivos status',
+          left: 'center',
+        },
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+        series: [
+          {
+            name: 'Status',
+            type: 'pie',
+            radius: '60%',
+            data: chartData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+          },
+        ],
+      };
+
+      myChart.setOption(option);
+    };
 
     const openTaskDetails = (task) => {
       selectedTask.value = task;
@@ -351,7 +401,12 @@ export default {
       }
     };
 
+    onMounted(() => {
+      loadTasks();
+    });
+
     return {
+      rows,
       columns,
       filterCompletedTasks,
       filterPendingTasks,
