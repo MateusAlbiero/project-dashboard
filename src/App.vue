@@ -3,17 +3,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 // import { apiClickUp } from './services/clickupService';
-import { apiGitHub } from './services/githubService';
+// import { apiGitHub } from './services/githubService';
 
 // const clickupTasks = ref([]);
-const githubTasks = ref([]);
+// const githubTasks = ref([]);
 
 onMounted(async () => {
   try {
-    const githubResponse = await apiGitHub.get('/users'); //GitHub
-    githubTasks.value = githubResponse.data;
+    // const githubResponse = await apiGitHub.get('/users'); //GitHub
+    // githubTasks.value = githubResponse.data;
 
     // const clickupResponse = await apiClickUp.get(''); //ClickUp
     // clickupTasks.value = clickupResponse.data;
