@@ -32,7 +32,7 @@
             class="q-dialog--xl"
             v-model="searchQuery"
             autofocus
-            label="Pesquisar"
+            placeholder="Pesquisar..."
             @keyup.enter="performSearch"
             :disable="loading"
           />
@@ -46,10 +46,13 @@
                 v-for="(tarefa) in limitedFilteredTasks" 
                 :key="tarefa.custom_id"
                 clickable
+                @click="openTaskDetails(tarefa)"
               >
                 <q-item-section>
                   <q-item-label>{{ tarefa.name }}</q-item-label>
-                  <q-item-label caption>{{ tarefa.custom_id }} | {{tarefa.status ? tarefa.status.status : 'Aberto' }} | {{ tarefa.assignees.map(a => a.username).join(', ') || 'Não informado' }}</q-item-label>
+                  <q-item-label caption>
+                    {{ tarefa.custom_id }} | {{ tarefa.status ? tarefa.status.status : 'Aberto' }} | {{ tarefa.assignees.map(a => a.username).join(', ') || 'Não informado' }}
+                  </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -61,6 +64,39 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+
+    <q-dialog
+      v-model="isDialogOpen"
+      full-height
+      transition-show="scale"
+      transition-hide="scale"
+      class="mt-1"
+      :inert="!isDialogOpen"
+    >
+      <q-card class="q-pa-md card">
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6 text-grey-8">Detalhes da tarefa</div>
+          <q-space />
+          <q-btn icon="close" flat round dense @click="isDialogOpen = false" />
+        </q-card-section>
+
+        <q-card-section class="q-pt-none mr-4 ml-4">
+          <TaskDetails v-if="selectedTask" :task="selectedTask" />
+        </q-card-section>
+
+        <q-card-actions class="justify-center mt-2">
+          <q-btn 
+            push 
+            align="between" 
+            color="primary" 
+            label="Abrir tarefa no ClickUp" 
+            icon="open_in_new" 
+            @click="openClickUp(selectedTask?.url)" 
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-layout>
 </template>
 
@@ -69,6 +105,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { apiClickUp } from 'src/services/clickupService';
+import TaskDetails from 'src/components/TaskDetails.vue';
 
 interface Tarefa {
   custom_id: string;
@@ -76,6 +113,7 @@ interface Tarefa {
   status: { status: string };
   assignees: { username: string }[];
   space: { id: string };
+  url: string;
 }
 
 interface ClickUpResponse {
@@ -90,6 +128,8 @@ const searchQuery = ref('');
 const loading = ref(false);
 const rows = ref<Tarefa[]>([]);
 const errorMessage = ref('');
+const selectedTask = ref<Tarefa | null>(null);
+const isDialogOpen = ref(false);
 
 const filteredTasks = computed(() =>
   rows.value.filter(row =>
@@ -158,6 +198,19 @@ function logout() {
   localStorage.removeItem('expiration');
   router.push('/login');
 }
+
+const openTaskDetails = (task: Tarefa) => {
+  selectedTask.value = task;
+  isDialogOpen.value = true;
+};
+
+const openClickUp = (url: string | undefined) => {
+  if (url) {
+    window.open(url, '_blank');
+  } else {
+    console.log('URL inválida');
+  }
+};
 </script>
 
 <style scoped>
