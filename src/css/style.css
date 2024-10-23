@@ -10,10 +10,6 @@
     flex: 1;
 }
 
-.q-toolbar-title {
-    /* margin-left: 20%; */
-}
-
 .login-page {
     display: flex;
     align-items: center;
@@ -78,7 +74,7 @@
 .dashboard-container {
     background-color: #f5f5f5;
     padding: 20px;
-    height: calc(100vh - 40px);
+    height: 100%;
 }
 
 .blue-header {
@@ -102,6 +98,12 @@
 }
 
 #status-chart {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#responsible-chart {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
