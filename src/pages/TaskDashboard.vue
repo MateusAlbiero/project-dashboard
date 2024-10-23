@@ -14,6 +14,7 @@
           <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas concluídas</h5>
             <q-input
+              style="width: 350px;"
               outlined
               dense
               debounce="300"
@@ -124,6 +125,7 @@
           <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas pendentes</h5>
             <q-input
+              style="width: 350px;"
               outlined
               dense
               debounce="300"
