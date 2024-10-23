@@ -2,7 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="bg-primary text-white">
-        <q-toolbar-title>Dashboard</q-toolbar-title>
+        <q-toolbar-title class="flex items-center">
+          <q-icon name="dashboard" size="30px" class="q-mr-sm" />
+          Dashboard
+        </q-toolbar-title>
         <div class="search-container">
           <q-btn
             align="between"
