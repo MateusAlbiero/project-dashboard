@@ -63,7 +63,14 @@
           </div>
 
           <div v-else-if="filteredTasks.length == 0 && !loading">
-            <p class="text-center">Nenhum registro encontrado :(</p>
+            <q-card class="full-width q-pa-xs mb-05 mt-05">
+                <q-card-section class="text-center">
+                  <div>
+                    <img src="/img/error/NotFound.png" width="150px" alt="Erro" class="error-image" />
+                  </div>
+                  <span class="text-primary" style="font-weight: bold;">Nenhum registro encontrado :(</span>
+                </q-card-section>
+              </q-card>
           </div>
         </q-card-section>
       </q-card>

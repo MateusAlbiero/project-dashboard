@@ -112,9 +112,14 @@
             </template>
 
             <template v-slot:no-data>
-              <div class="full-width row justify-center items-center q-pa-md">
-                Nenhum registro encontrado :(
-              </div>
+              <q-card class="full-width q-pa-xs mb-05 mt-05">
+                <q-card-section class="text-center">
+                  <div>
+                    <img src="/img/error/NotFound.png" width="150px" alt="Erro" class="error-image" />
+                  </div>
+                  <span class="text-primary" style="font-weight: bold;">Nenhum registro encontrado :(</span>
+                </q-card-section>
+              </q-card>
             </template>
           </q-table>
         </div>
@@ -220,9 +225,14 @@
             </template>
 
             <template v-slot:no-data>
-              <div class="full-width full-height row justify-center items-center">
-                Nenhum registro encontrado :(
-              </div>
+              <q-card class="full-width q-pa-xs mb-05 mt-05">
+                <q-card-section class="text-center">
+                  <div>
+                    <img src="/img/error/NotFound.png" width="150px" alt="Erro" class="error-image" />
+                  </div>
+                  <span class="text-primary" style="font-weight: bold;">Nenhum registro encontrado :(</span>
+                </q-card-section>
+              </q-card>
             </template>
           </q-table>
         </div>
@@ -355,7 +365,7 @@ export default {
       }));
 
       const chartDom = document.getElementById('status-chart');
-      const myChart = echarts.init(chartDom);
+      const chartStatus = echarts.init(chartDom);
 
       const option = {
         title: {
@@ -388,7 +398,10 @@ export default {
         ],
       };
 
-      myChart.setOption(option);
+      chartStatus.setOption(option);
+      chartStatus.on('click', (params) => {
+        filterTasksByStatus(params.name);
+      });
     };
 
     const renderChartResponsible = () => {
@@ -439,6 +452,9 @@ export default {
       };
 
       chartResponsible.setOption(option);
+      chartResponsible.on('click', (params) => {
+        filterTasksByResponsible(params.name);
+      });
     };
 
     const openTaskDetails = (task) => {
@@ -461,6 +477,18 @@ export default {
       } else {
         console.log('URL inválida');
       }
+    };
+
+    const filterTasksByStatus = (statusName) => {
+      console.log('Status clicado foi: ', statusName);
+      filterCompletedTasks.value = statusName;
+      filterPendingTasks.value = statusName;
+    };
+
+    const filterTasksByResponsible = (responsibleName) => {
+      console.log('Responsável clicado foi: ', responsibleName);
+      filterCompletedTasks.value = responsibleName;
+      filterPendingTasks.value = responsibleName;
     };
 
     onMounted(() => {
