@@ -1,8 +1,15 @@
 <template>
   <div class="dashboard-container">
-    <div id="status-chart" style="height: 400px;"></div>
+    <div class="flex-jb mt-1">
+      <div class="q-pa-lg modal-dashboard">
+        <div id="responsible-chart" style="height: 400px;"></div>
+      </div>
+      <div class="q-pa-lg modal-dashboard">
+        <div id="status-chart" style="height: 400px;"></div>
+      </div>
+    </div>
     <div class="flex-jb">
-      <div class="q-mb-xl q-pa-xl modal-dashboard">
+      <div class="q-pa-lg modal-dashboard">
         <div class="q-mb-md">
           <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas concluídas</h5>
@@ -12,6 +19,7 @@
               debounce="300"
               v-model="filterCompletedTasks"
               placeholder="Buscar..."
+              autofocus
             >
               <template v-slot:append>
                 <q-icon name="search" />
@@ -111,7 +119,7 @@
         </div>
       </div>
 
-      <div class="q-pa-xl modal-dashboard my-sticky-dynamic">
+      <div class="q-pa-lg modal-dashboard">
         <div class="q-mb-md">
           <div class="pending-tasks flex-jb flex-ac">
             <h5>Tarefas pendentes</h5>
@@ -327,11 +335,12 @@ export default {
       } finally {
         $q.loading.hide();
         isLoading.value = false;
-        renderChart();
+        renderChartStatus();
+        renderChartResponsible();
       }
     };
 
-    const renderChart = () => {
+    const renderChartStatus = () => {
       const statusCounts = rows.value.reduce((acc, task) => {
         const status = task.status?.id ? $t(`status.${task.status?.id}`) : 'Aberto';
         acc[status] = (acc[status] || 0) + 1;
@@ -363,7 +372,8 @@ export default {
           {
             name: 'Status',
             type: 'pie',
-            radius: '60%',
+            radius: '70%',
+            center: ['55%', '60%'],
             data: chartData,
             emphasis: {
               itemStyle: {
@@ -377,6 +387,56 @@ export default {
       };
 
       myChart.setOption(option);
+    };
+
+    const renderChartResponsible = () => {
+      const responsibleCounts = rows.value.reduce((acc, task) => {
+        const responsible = task.assignees && task.assignees.length > 0 ? task.assignees[0].username : 'Não Informado';
+        acc[responsible] = (acc[responsible] || 0) + 1;
+        return acc;
+      }, {});
+      
+      const chartDataResponsible = Object.entries(responsibleCounts).map(([responsible, count]) => ({
+        value: count,
+        name: responsible,
+      }));
+
+      const chartDom = document.getElementById('responsible-chart');
+      const chartResponsible = echarts.init(chartDom);
+
+      const option = {
+        title: {
+          text: 'Responsáveis das Tarefas',
+          subtext: 'Gráfico de tarefas com seus respectivos responsáveis',
+          left: 'right',
+          textAlign: 'center',
+        },
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+        series: [
+          {
+            name: 'Responsáveis',
+            type: 'pie',
+            radius: '60%',
+            center: ['62%', '62%'],
+            data: chartDataResponsible,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+          },
+        ],
+      };
+
+      chartResponsible.setOption(option);
     };
 
     const openTaskDetails = (task) => {
