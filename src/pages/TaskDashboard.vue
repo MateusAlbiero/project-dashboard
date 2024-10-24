@@ -16,29 +16,50 @@
               <q-toolbar-title shrink style="font-size: 1.5rem;">Tarefas</q-toolbar-title>
               <div class="text-grey-8">Listagem de tarefas do SG Master</div>
             </div>
-            <div>
-              <q-input
-                style="width: 400px;"
-                outlined
-                dense
-                debounce="300"
-                v-model="filterTasks"
-                placeholder="Buscar..."
-                hint="Busque qualquer tarefa por descrição, protocolo, status ou responsáveis."
-                autofocus
-              >
-                <template v-slot:append>
-                  <q-icon name="search" />
-                </template>
-              </q-input>
+            <q-list class="flex-c flex-ae">
+              <q-item>
+                <q-input
+                  style="width: 400px;"
+                  outlined
+                  dense
+                  debounce="300"
+                  v-model="filterTasks"
+                  placeholder="Buscar..."
+                  hint="Busque qualquer tarefa por descrição, protocolo, status ou responsáveis."
+                  autofocus
+                >
+                  <template v-slot:append>
+                    <q-icon name="search" />
+                  </template>
+                </q-input>
+              </q-item>
 
-              <q-chip v-if="selectedStatus" removable v-model="selectedStatus" color="primary" text-color="white">
-                {{ `Status: ${$t(`status.${selectedStatus}`)}` }}
-              </q-chip>
-              <q-chip  v-if="selectedResponsible" removable v-model="selectedResponsible" color="primary" text-color="white">
-                {{ `Responsável: ${selectedResponsible}` }}
-              </q-chip>
-            </div>
+              <div class="flex-ae">
+                <div v-for="status in selectedStatus" :key="status">
+                  <q-chip
+                    removable
+                    color="primary"
+                    text-color="white"
+                    class="text-caption"
+                    @remove="() => removeStatus(status)"
+                  >
+                    {{ `Status: ${$t(`status.${status}`)}` }}
+                  </q-chip>
+                </div>
+
+                <div v-if="selectedResponsible">
+                  <q-chip
+                    class="text-caption"
+                    removable
+                    v-model="selectedResponsible"
+                    color="primary"
+                    text-color="white"
+                  >
+                    {{ `Responsável: ${selectedResponsible}` }}
+                  </q-chip>
+                </div>
+              </div>
+            </q-list>
           </div>
 
           <q-table
@@ -211,21 +232,20 @@ export default {
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
     const { t: $t } = i18n.global;
-    const selectedStatus = ref(null);
+    const selectedStatus = ref([]);
     const selectedResponsible = ref(null);
 
     const filteredTasks = computed(() => {
-      console.log('caiu aqui e vai filtrar pelas completas');
-      
       return rows.value.filter(row =>
         row.space.id === '90130860103' &&
-        (selectedStatus.value ? row.status.id === selectedStatus.value : true) &&
+        (selectedStatus.value.length ? selectedStatus.value.includes(row.status.id) : true) &&
         (selectedResponsible.value ? row.assignees.some(assignee => assignee.username === selectedResponsible.value) : 'Não informado') &&
         ((row.name && row.name.toLowerCase().includes(filterTasks.value.toLowerCase())) ||
           (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterTasks.value.toLowerCase())) ||
           (row.status.status && row.status.status.toString().toLowerCase().includes(filterTasks.value.toLowerCase())) ||
           (row.assignees.some(a => a.username.toLowerCase().includes(filterTasks.value.toLowerCase())))));
     });
+
 
     const loadTasks = async () => {
       try {
@@ -382,14 +402,25 @@ export default {
     };
 
     const filterTasksByStatus = (statusName) => {
-      console.log('Status clicado foi: ', statusName);
-      selectedStatus.value = statusName;
+      const index = selectedStatus.value.indexOf(statusName);
+      if (index === -1) {
+        selectedStatus.value.push(statusName);
+      } else {
+        selectedStatus.value.splice(index, 1);
+      }
+    };
+
+    const removeStatus = (statusName) => {
+      const index = selectedStatus.value.indexOf(statusName);
+      if (index !== -1) {
+        selectedStatus.value.splice(index, 1);
+      }
     };
 
     const filterTasksByResponsible = (responsibleName) => {
-      console.log('Responsável clicado foi: ', responsibleName);
       selectedResponsible.value = responsibleName;
     };
+
 
     onMounted(() => {
       loadTasks();
@@ -404,6 +435,7 @@ export default {
       selectedResponsible,
       selectedTask,
       isDialogOpen,
+      removeStatus,
       openTaskDetails,
       formatValue,
       openClickUp,
