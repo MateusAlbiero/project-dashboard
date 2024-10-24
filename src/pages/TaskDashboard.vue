@@ -75,14 +75,20 @@
                     <q-chip
                       size="12px"
                       :class="{
+                        'bg-gray text-black':
+                          col.value === 'sc901303007954_tGoRmoEs', // aberto
+                        'bg-red-8 text-white':
+                          col.value === 'sc901303007954_GXKcfrH2', // pendente
                         'bg-orange-8 text-white':
-                          col.value === 'sc901303007954_qiBEkmhZ',
+                          col.value === 'sc901303007954_IFDVes5B', // em andamento
                         'bg-yellow-8 text-white':
-                          col.value === 'sc901303007954_VhnEd1ez',
+                          col.value === 'sc901303007954_qiBEkmhZ', // em testes
                         'bg-blue-8 text-white':
-                          col.value === 'sc901303007954_qiBEkmhZ',
+                          col.value === 'sc901303007954_VhnEd1ez', // testado
                         'bg-green-8 text-white':
-                          col.value === 'sc901303007954_cq6ukTMC'
+                          col.value === 'sc901303007954_cq6ukTMC', // finalizado
+                        'bg-purple-8 text-white':
+                          col.value === 'sc901303007954_ywDMi6Jm' // upado
                       }"
                     >
                       {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
