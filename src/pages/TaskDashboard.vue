@@ -12,13 +12,13 @@
       <div class="q-pa-lg modal-dashboard">
         <div class="q-mb-md">
           <div class="pending-tasks flex-jb flex-ac">
-            <h5>Tarefas concluídas</h5>
+            <h4>Tarefas</h4>
             <q-input
               style="width: 350px;"
               outlined
               dense
               debounce="300"
-              v-model="filterCompletedTasks"
+              v-model="filterTasks"
               placeholder="Buscar..."
               autofocus
             >
@@ -32,7 +32,7 @@
             :dense="$q.screen.lt.md"
             flat
             bordered
-            :rows="filteredCompletedTasks"
+            :rows="filteredTasks"
             :columns="columns"
             :rows-per-page="5"
             :rows-per-page-options="[5]"
@@ -102,118 +102,14 @@
                       {{ props.row.assignees.map(a => a.username).join(', ') || 'Não informado' }}
                     </span>
                   </template>
-                  <template v-else>
-                    <span class="truncate">
-                      {{ col.value }}
-                    </span>
-                  </template>
-                </q-td>
-              </q-tr>
-            </template>
-
-            <template v-slot:no-data>
-              <q-card class="full-width q-pa-xs mb-05 mt-05">
-                <q-card-section class="text-center">
-                  <div>
-                    <img src="/img/error/NotFound.png" width="150px" alt="Erro" class="error-image" />
-                  </div>
-                  <span class="text-primary" style="font-weight: bold;">Nenhum registro encontrado :(</span>
-                </q-card-section>
-              </q-card>
-            </template>
-          </q-table>
-        </div>
-      </div>
-
-      <div class="q-pa-lg modal-dashboard">
-        <div class="q-mb-md">
-          <div class="pending-tasks flex-jb flex-ac">
-            <h5>Tarefas pendentes</h5>
-            <q-input
-              style="width: 350px;"
-              outlined
-              dense
-              debounce="300"
-              v-model="filterPendingTasks"
-              placeholder="Buscar..."
-            >
-              <template v-slot:append>
-                <q-icon name="search" />
-              </template>
-            </q-input>
-          </div>
-
-          <q-table
-            :dense="$q.screen.lt.md"
-            flat
-            bordered
-            :rows="filteredPendingTasks"
-            :columns="columns"
-            :rows-per-page="5"
-            :rows-per-page-options="[5]"
-            row-key="protocol"
-          >
-            <template v-slot:header="props">
-              <q-tr :props="props" class="bg-primary text-white">
-                <q-th
-                  v-for="col in props.cols"
-                  :key="col.name"
-                  :props="props"
-                >
-                  {{ col.label }}
-                </q-th>
-              </q-tr>
-            </template>
-
-            <template #body="props">
-              <q-tr class="cursor-pointer" @click="openTaskDetails(props.row)">
-                <q-td
-                  v-for="col in props.cols"
-                  :key="col.name"
-                  :props="props"
-                >
-                  <template v-if="col.name === 'status'">
+                  <template v-else-if="col.name === 'tags'">
                     <q-chip
                       size="12px"
-                      :class="{
-                        'bg-gray text-black':
-                          col.value === 'sc901303007954_tGoRmoEs',
-                        'bg-purple-8 text-white':
-                          col.value === 'sc901303007954_GXKcfrH2',
-                        'bg-orange-8 text-white':
-                          col.value === 'sc901303007954_IFDVes5B'
-                      }"
+                      :class="'bg-blue-8 text-white'"
                     >
-                      {{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}
-                      <q-tooltip>{{ col.value ? $t(`status.${col.value}`) : 'Aberto' }}</q-tooltip>
+                      {{ props.row.tags.map(t => t.name.charAt(0).toUpperCase() + t.name.slice(1)).join(', ') || 'Vazio' }}
+                      <q-tooltip>{{ props.row.tags.map(t => t.name.charAt(0).toUpperCase() + t.name.slice(1)).join(', ') || 'Vazio' }}</q-tooltip>
                     </q-chip>
-                  </template>
-                  <template v-else-if="col.name === 'priority'">
-                    <q-chip
-                      size="12px"
-                      :class="{
-                        'bg-red-8 text-white':
-                          col.value === 'urgent',
-                        'bg-yellow-8 text-white':
-                          col.value === 'pending',
-                        'bg-green-9 text-white':
-                          col.value === 'completed',
-                        'bg-orange-8 text-white':
-                          col.value === 'high',
-                        'bg-gray text-black':
-                          col.value === 'low',
-                        'bg-blue-8 text-white':
-                          col.value === 'normal',
-                      }"
-                    >
-                      {{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}
-                      <q-tooltip>{{ col.value ? $t(`priority.${col.value}`) : 'Normal' }}</q-tooltip>
-                    </q-chip>
-                  </template>
-                  <template v-else-if="col.name === 'assignees.username'">
-                    <span>
-                      {{ props.row.assignees.map(a => a.username).join(', ') || 'Não informado' }}
-                    </span>
                   </template>
                   <template v-else>
                     <span class="truncate">
@@ -283,47 +179,33 @@ export default {
     const $q = useQuasar();
     const columns = [
       { name: 'name', label: 'Descrição', align: 'left', field: row => row.name,  style: 'overflow: hidden; min-width: 300px; max-width: 300px; text-overflow: ellipsis;' },
+      { name: 'tags', label: 'Etiqueta', align: 'center', field: row => row.tags.map(t => t.name).join(', ') || 'Vazio', style: 'overflow: hidden; min-width: 150px; max-width: 150px; text-overflow: ellipsis;' },
       { name: 'custom_id', label: 'Protocolo', align: 'center', field: 'custom_id', width: '100px' },
       { name: 'status', label: 'Status', align: 'center', field: row => row.status?.id || 'Não informado', style: 'min-width: 150px; max-width: 150px;' },
       { name: 'responsible', label: 'Responsáveis', align: 'center', field: row => row.assignees.map(a => a.username).join(', ') || 'Não informado', style: 'overflow: hidden; min-width: 150px; max-width: 150px; text-overflow: ellipsis;' },
       { name: 'priority', label: 'Prioridade', align: 'center', field: row => row.priority?.priority || 'normal', width: '100px', style: 'min-width: 120px; max-width: 120px;' },
     ];
 
-    const filterCompletedTasks = ref('');
-    const filterPendingTasks = ref('');
+    const filterTasks = ref('');
     const rows = ref([]);
     const isLoading = ref(true);
     const selectedTask = ref({});
     const isDialogOpen = ref(false);
     const { t: $t } = i18n.global;
+    const selectedStatus = ref(null);
+    const selectedResponsible = ref(null);
 
-    const filteredCompletedTasks = computed(() => {
-      return rows.value.filter(row => 
-        row.space.id === '90130860103' &&
-        (row.status.id === 'sc901303007954_qiBEkmhZ' ||
-         row.status.id === 'sc901303007954_VhnEd1ez' ||
-         row.status.id === 'sc901303007954_cq6ukTMC' ||
-         row.status.id === 'sc901303007954_ywDMi6Jm') && 
-        ((row.name && row.name.toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
-         (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
-         (row.status.status && row.status.status.toString().toLowerCase().includes(filterCompletedTasks.value.toLowerCase())) ||
-         (row.assignees.some(a => a.username.toLowerCase().includes(filterCompletedTasks.value.toLowerCase())))
-        )
-      );
-    });
-
-    const filteredPendingTasks = computed(() => {
+    const filteredTasks = computed(() => {
+      console.log('caiu aqui e vai filtrar pelas completas');
+      
       return rows.value.filter(row =>
         row.space.id === '90130860103' &&
-        (row.status.id === 'sc901303007954_tGoRmoEs' ||
-         row.status.id === 'sc901303007954_GXKcfrH2' ||
-         row.status.id === 'sc901303007954_IFDVes5B') &&
-         ((row.name && row.name.toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
-         (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
-         (row.status.status && row.status.status.toString().toLowerCase().includes(filterPendingTasks.value.toLowerCase())) ||
-         (row.assignees.some(a => a.username.toLowerCase().includes(filterPendingTasks.value.toLowerCase())))
-        )
-      );
+        (selectedStatus.value ? row.status.id === selectedStatus.value : true) &&
+        (selectedResponsible.value ? row.assignees.some(assignee => assignee.username === selectedResponsible.value) : 'Não informado') &&
+        ((row.name && row.name.toLowerCase().includes(filterTasks.value.toLowerCase())) ||
+          (row.custom_id && row.custom_id.toString().toLowerCase().includes(filterTasks.value.toLowerCase())) ||
+          (row.status.status && row.status.status.toString().toLowerCase().includes(filterTasks.value.toLowerCase())) ||
+          (row.assignees.some(a => a.username.toLowerCase().includes(filterTasks.value.toLowerCase())))));
     });
 
     const loadTasks = async () => {
@@ -354,14 +236,15 @@ export default {
 
     const renderChartStatus = () => {
       const statusCounts = rows.value.reduce((acc, task) => {
-        const status = task.status?.id ? $t(`status.${task.status?.id}`) : 'Aberto';
-        acc[status] = (acc[status] || 0) + 1;
+        const statusId = task.status?.id || 'Aberto';
+        acc[statusId] = acc[statusId] ? acc[statusId] + 1 : 1;
         return acc;
       }, {});
 
-      const chartData = Object.entries(statusCounts).map(([status, count]) => ({
+      const chartData = Object.entries(statusCounts).map(([id, count]) => ({
         value: count,
-        name: status,
+        name: $t(`status.${id}`),
+        id: id,
       }));
 
       const chartDom = document.getElementById('status-chart');
@@ -400,13 +283,13 @@ export default {
 
       chartStatus.setOption(option);
       chartStatus.on('click', (params) => {
-        filterTasksByStatus(params.name);
+        filterTasksByStatus(params.data.id);
       });
     };
 
     const renderChartResponsible = () => {
       const responsibleCounts = rows.value.reduce((acc, task) => {
-        const responsible = task.assignees && task.assignees.length > 0 ? task.assignees[0].username : 'Não Informado';
+        const responsible = task.assignees && task.assignees.length > 0 ? task.assignees[0].username : 'Não informado';
         acc[responsible] = (acc[responsible] || 0) + 1;
         return acc;
       }, {});
@@ -481,14 +364,12 @@ export default {
 
     const filterTasksByStatus = (statusName) => {
       console.log('Status clicado foi: ', statusName);
-      filterCompletedTasks.value = statusName;
-      filterPendingTasks.value = statusName;
+      selectedStatus.value = statusName;
     };
 
     const filterTasksByResponsible = (responsibleName) => {
       console.log('Responsável clicado foi: ', responsibleName);
-      filterCompletedTasks.value = responsibleName;
-      filterPendingTasks.value = responsibleName;
+      selectedResponsible.value = responsibleName;
     };
 
     onMounted(() => {
@@ -498,10 +379,8 @@ export default {
     return {
       rows,
       columns,
-      filterCompletedTasks,
-      filterPendingTasks,
-      filteredCompletedTasks,
-      filteredPendingTasks,
+      filterTasks,
+      filteredTasks,
       selectedTask,
       isDialogOpen,
       openTaskDetails,
