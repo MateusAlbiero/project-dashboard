@@ -13,10 +13,9 @@
         <div class="q-mb-md">
           <div class="pending-tasks flex-jb flex-ac">
             <div class="mb-2 mt-2">
-              <div class="text-h4">Tarefas</div>
-              <div class="text-h6">Listagem de tarefas do SG Master</div>
+              <q-toolbar-title shrink style="font-size: 1.5rem;">Tarefas</q-toolbar-title>
+              <div class="text-grey-8">Listagem de tarefas do SG Master</div>
             </div>
-
             <div>
               <q-input
                 style="width: 400px;"
@@ -33,11 +32,11 @@
                 </template>
               </q-input>
 
-              <q-chip v-if="selectedStatus" removable v-model="selectedStatus" color="primary" text-color="white" icon="info">
-                {{ $t(`status.${selectedStatus}`) }}
+              <q-chip v-if="selectedStatus" removable v-model="selectedStatus" color="primary" text-color="white">
+                {{ `Status: ${$t(`status.${selectedStatus}`)}` }}
               </q-chip>
-              <q-chip  v-if="selectedResponsible" removable v-model="selectedResponsible" color="primary" text-color="white" icon="info">
-                {{ selectedResponsible }}
+              <q-chip  v-if="selectedResponsible" removable v-model="selectedResponsible" color="primary" text-color="white">
+                {{ `Responsável: ${selectedResponsible}` }}
               </q-chip>
             </div>
           </div>
@@ -272,8 +271,8 @@ export default {
 
       const option = {
         title: {
-          text: 'Status das Tarefas',
-          subtext: 'Gráfico de tarefas com seus respectivos status',
+          text: 'Status das tarefas',
+          subtext: 'Gráfico de status por tarefas',
           left: 'center',
         },
         tooltip: {
@@ -324,8 +323,8 @@ export default {
 
       const option = {
         title: {
-          text: 'Responsáveis das Tarefas',
-          subtext: 'Gráfico de tarefas com seus respectivos responsáveis',
+          text: 'Responsáveis das tarefas',
+          subtext: 'Gráfico de responsáveis por tarefas',
           left: 'right',
           textAlign: 'center',
         },
