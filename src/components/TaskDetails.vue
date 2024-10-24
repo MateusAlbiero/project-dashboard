@@ -37,7 +37,7 @@
           <span v-if="task.tags && task.tags.length > 0">
             <span v-for="tag in task.tags" :key="tag.name">
               <q-chip size="12px" class="bg-blue-8 text-white mb-025">
-                {{ tag.name }}
+                {{ tag.name.charAt(0).toUpperCase() + tag.name.slice(1) }}
               </q-chip>
             </span>
           </span>
