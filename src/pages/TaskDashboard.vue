@@ -14,12 +14,13 @@
           <div class="pending-tasks flex-jb flex-ac">
             <h4>Tarefas</h4>
             <q-input
-              style="width: 350px;"
+              style="width: 400px;"
               outlined
               dense
               debounce="300"
               v-model="filterTasks"
               placeholder="Buscar..."
+              hint="Busque qualquer tarefa por descrição, protocolo, status ou responsáveis."
               autofocus
             >
               <template v-slot:append>
@@ -34,8 +35,8 @@
             bordered
             :rows="filteredTasks"
             :columns="columns"
-            :rows-per-page="5"
-            :rows-per-page-options="[5]"
+            :rows-per-page="10"
+            :rows-per-page-options="[10]"
             row-key="protocol"
           >
             <template v-slot:header="props">
@@ -321,7 +322,7 @@ export default {
             name: 'Responsáveis',
             type: 'pie',
             radius: '60%',
-            center: ['62%', '62%'],
+            center: ['70%', '60%'],
             data: chartDataResponsible,
             emphasis: {
               itemStyle: {
