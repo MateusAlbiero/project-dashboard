@@ -8,15 +8,18 @@
         </q-toolbar-title>
         <div class="search-container">
           <q-btn
+            unelevated
             align="left"
             icon="search"
-            class="search-button text-grey-4 q-font-light"
+            class="search-button text-blue-8 q-font-light"
             @click="openSearchModal"
             label="Pesquisar"
           />
         </div>
         <q-space />
         <q-btn
+          unelevated
+          class="bg-white text-blue-8"
           icon="logout"
           size="sm"
           @click="confirmLogout"
