@@ -328,11 +328,15 @@ export default {
 
     const renderChartResponsible = () => {
       const responsibleCounts = rows.value.reduce((acc, task) => {
-        const responsible = task.assignees && task.assignees.length > 0 ? task.assignees[0].username : 'Não informado';
-        acc[responsible] = (acc[responsible] || 0) + 1;
+        if (task.assignees && task.assignees.length > 0) {
+          task.assignees.forEach(assignee => {
+            const responsible = assignee.username;
+            acc[responsible] = (acc[responsible] || 0) + 1;
+          });
+        }
         return acc;
       }, {});
-      
+
       const chartDataResponsible = Object.entries(responsibleCounts).map(([responsible, count]) => ({
         value: count,
         name: responsible,
