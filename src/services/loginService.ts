@@ -9,7 +9,7 @@ declare module 'vue' {
 }
 
 const apiAcessoRestrito = axios.create({
-   baseURL: 'https://sgbr.com.br/acessorestrito/api/auth/login',
+   baseURL: 'https://acessorestrito.sgbr.com.br/api/auth/login',
     headers: {
       Authorization: 'API Key 5L/8K//}#$@dwKgf/)XqqQB6ZnrhFHX4qm[Y*=wX&%sxSvU5S;nsBm&U=K=7',
     }
